@@ -1,9 +1,26 @@
-# gh_gen_template
-GitHub general template
+# Dodecahedron games
 
-## Includes:
-- [/src/tests/tests.c](/src/tests/tests.c) - basic test file for C projects.
-- [Makefile](/src/Makefile) - general Makefile for C projects.
-- .github - contains a self-hosted CI workflow for a C project.
+## Contents
+- [Dodecahedron games](#dodecahedron-games)
+  - [Contents](#contents)
+  - [General](#general)
+    - [Project elements](#project-elements)
+    - [Theory](#theory)
 
-These files can be used for the project start, but must be adjusted according to your needs.
+## General
+This project is an implementation of several games, including "The Tetris", "The Snake". Furthermore, it includes console and windowed UI for those games. The implementation languages are: C, C++. 
+
+### Project elements
+
+| №   | Element    | Language of <br> implementation | Description |
+| --- | ---------- | ------------------------------- | ----------- |
+| 0   | The Tetris | C                               | [Click]()   |
+| 1   | The Snake  | C++                             | [Click]()   |
+| 2   | Console UI | C                               | [Click]()   |
+| 3   | GUE        | C++                             | [Click]()   |
+
+
+### Theory
+Implementation of games in this project are based on [finite-state machine](). 
+
+
