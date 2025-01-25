@@ -130,7 +130,8 @@ Makefile.old
 dkms.conf
 
 # Spesial files and folders
-.vscode/
-.obsidian/
+.vscode
+.obsidian
 *.env
-build/
+build
+*/gen_docs
