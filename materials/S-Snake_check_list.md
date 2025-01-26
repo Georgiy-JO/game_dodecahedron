@@ -1,18 +1,18 @@
-# The Snake specifications
+# The S-Snake specifications
 
-## Practical check lists for The Snake game
+## Practical check lists for The S-Snake game
 
 ### Main part
 
 |Specification|State|Remove for GH|
 |---|---|---|
-|Implement The Snake game|||
+|Implement The S-Snake game|||
 |The program is developed in C++ language of C++17 standard.|||
-|The program consist of two parts:  <br> - library that implements the logic of The Snake game <br> - a desktop interface.|||
+|The program consist of two parts:  <br> - library that implements the logic of The S-Snake game <br> - a desktop interface.|||
 |A finite state machine is used to formalize the logic of the game.|||
 |The library conform to the specification given in [library-specification.md](link).|||
-|The program library code must is in the `src/brick_game/snake` folder.||✔️(change folder name)|
-|The program interface (GUI) code is in the `src/gui/desktop` folder.|||
+|The program library code must is in the `src/brick_game/snake` folder.||✔️(change "brick_game" folder name)|
+|The program interface (GUI) code is in the `src/gui/desktop` folder.||✔️(gui->ui; desktop->gui)|
 |Code follows Google Style.|||
 |Classes are implemented within the `s21` namespace.||✔️(rename namespace)|
 |The library that implements the game logic is covered by unit tests: <br> - FMS states are checked; <br>  - transitions are checked <br>- game logic is checked; |||
@@ -22,8 +22,8 @@
 |The installation directory can be choosed during installation.|||
 |The implementation have a GUI based onthe GUI library with an API for C++17:<br> - Qt <br> - GTK+||✔️|
 |The program is implemented using the MVC pattern. <br>  - There is no business logic code in the view code;<br>- There is no interface code in the model, presenter, and view model;<br> - Controllers are thin.|||
-|The game logic library is copied from [The Tetris project](\\link) with minor changes. <br> - The desktop interface supports it.|||
-|Console interface from [The Tetris project](\\link) is taken with minor changes. <br> - it supports The Snake.|||
+|The game logic library is copied from [The Tetris project]([link](https://github.com/Georgiy-JO/te-tris_pet)) with minor changes. <br> - The desktop interface supports it.|||
+|Console interface from [The Tetris project]([link](https://github.com/Georgiy-JO/te-tris_pet)) is taken with minor changes. <br> - it supports The S-Snake.|||
 |The following mechanics is present in The Snake game (Classic version):<br>- The snake must move on its own, one block ahead, when the game timer runs out.<br>- When the snake hits an "apple", its length increases by one.<br>- When the length of the snake reaches 200 units, the game ends and the player wins.<br>- If a snake hits a field boundary or itself, the game ends with the player losing.<br>- The user can change the direction of the snake's movement using the arrows, and the snake can only turn left and right relative to the current direction of movement.<br>- The user can speed up the snake's movement by pressing the action key or forward key.|||
 |The initial length of the snake is four "pixels".|||
 |The playing field is 10 "pixels" wide and 20 "pixels" high.|||

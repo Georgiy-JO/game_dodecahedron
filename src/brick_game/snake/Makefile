@@ -1,1 +1,1 @@
-#copy from tetris
+#copy from tetris and adjust 
