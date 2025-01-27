@@ -12,7 +12,7 @@
 ## General
 This project is an implementation of several games, including "The Te-Tris", "The S-Snake", etc. Furthermore, it includes console (TUI) and windowed (GUI) UI for those games. The implementation languages are: C, C++. 
 
-## Theory
+### Theory
 
 Implementation of games in this project are based on [finite-state machine](/materials/Finite-state_machine.md). The structure of the project is chosen based on patterns described in [MVC_MVP_MVVM.md](/materials/MVC_MVP_MVVM.md) ideas.
 
@@ -82,3 +82,6 @@ typedef enum {
 void userInput(UserAction_t action, bool hold);
 ```
 
+## Tests
+
+Game libraries are covered with unit tests. Test files are located in *tests* folder.
