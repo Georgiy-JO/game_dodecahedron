@@ -1,5 +1,5 @@
-#ifndef GUI
-#define GUI
+#ifndef TUI
+#define TUI
 
 #include <math.h>
 #include <ncurses.h>

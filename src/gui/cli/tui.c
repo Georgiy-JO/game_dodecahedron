@@ -1,4 +1,4 @@
-#include "GUI_C.h"
+#include "tui.h"
 
 int main() {
   ncursesINIT();

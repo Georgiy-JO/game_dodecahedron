@@ -7,9 +7,9 @@
 #	documentation creation for The Te-Tris game library. 
 #
 # Notes:
-#	After building
-#	the library file will be located in the build folder of the project.
-#	DO not forget to adjust a root dir variable if it is required.
+#	After building the library file will be located in the build folder 
+#   of the project. DO not forget to adjust a root dir variable if it 
+#	is required.
 #
 # Key Targets:
 #   all / tetris.a	- Builds the libraty (default target).
@@ -50,7 +50,7 @@ ifeq ($(OS), Linux)
 endif
 
 # Checkers
-#Valgrind check can be found in global project building file or test file
+# Valgrind check can be found in test file
 CPPCHECK = cppcheck --enable=all --suppress=missingIncludeSystem  --force --check-level=exhaustive --checkers-report=$(CPPCHECK_FILE) 
 CLANG = clang-format --style=Google
 
@@ -92,12 +92,12 @@ all: $(LIB_NAME)
 $(LIB_NAME): clear_o $(OBJ_DIR) $(OBJ_FILES)
 	ar rcs $@ $(OBJ_FILES) 
 	@mv  $(LIB_NAME) $(BUILD_DIR)/$(LIB_NAME) 
-#	$(SELF) clear_o         
+	$(SELF) clear_o         
 
 # object files
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
-	$(C) $(MAIN_FLAGS) -c $< -o $@
+	@$(C) $(MAIN_FLAGS) -c $< -o $@
 
 # $(OBJ_DIR)/%.o: */%.c
 # 	@$(C) $(MAIN_FLAGS) -c $< -o $@

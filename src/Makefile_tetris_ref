@@ -90,9 +90,7 @@ uninstall_f:
 
 
 # GUI
-$(GUI_EXEC):clear_o $(GAME_DIR) $(LIB_NAME) $(GUI_OBJ_FILES)
-	$(CC) $(MAIN_FLAGS) $(GUI_OBJ_FILES) -o $(GUI_EXEC)  $(LIB_NAME) $(LIBFLAGS)
-	@make -s clear_o
+
 
 
 # object files

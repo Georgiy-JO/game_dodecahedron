@@ -1,27 +1,30 @@
 # ----------------------------------------------------------------------
-# Makefile for MyProject
+# Makefile for the Game Dodecahedron
 # ----------------------------------------------------------------------
 #
 # Purpose:
-#   This Makefile automates the build, clean, and testing processes
-#   for the MyProject application. It compiles source code, links
-#   libraries, and generates the final executable.
-#
-# Key Targets:
-#   all      - Builds the project (default target).
-#   clean    - Removes all build artifacts (e.g., object files, binaries).
-#   test     - Runs the test suite to ensure code correctness.
-#
-# Usage:
-#   To build the project:       make
-#   To clean the build:         make clean
-#   To run tests:               make test
+#   This Makefile automates the build, clean, install, uninstall, 
+#	distribute, document generration, unit tests and check processes 
+#	for the Game Dodecahedron application. It is based at smaller 
+#	Makefiles of libraries (parts of the project) and tests Makefile.
 #
 # Notes:
-#   - Requires GNU Make version 4.0 or later.
-#   - Ensure all dependencies are installed before building.
-#   - See the README.md for more details about the project.
+#	Icluded games: tetris, snake.
+#	
 #
+# Key Targets:
+#   all / tetris.a	- Builds the libraty (default target).
+#   clean    		- Removes all build artifacts.
+#   style_check    	- Runs result of style checks of the library code.
+#!   dvi    			- Creates documentation for the library.
+#	clean_doc		- Removes documentation artifacts.
+# 	style_make		- Change code so it passes style checks (Google st.).
+# 	cpp_check		- Check the library code with CppCheck tool.
+#	rebuild_lib		- Rebuild the library.
+#	help 			- List of targets.
+#
+# Usage:
+#   make target
 # ----------------------------------------------------------------------
 
 
@@ -30,7 +33,7 @@
 PROJECT_NAME=game_dodecahedron
 VERSION =0.1
 
-OS=$(shell uname)=
+OS=$(shell uname)
 MAKE = make --no-print-directory
 
 # Compillers
@@ -38,8 +41,8 @@ C = gcc
 CC = g++
 
 # Flags
-MAIN_FLAGS_C = -std=c11
-MAIN_FLAGS_CC = -std=c++17
+LAN_FLAGS_C = -std=c11
+LAN_FLAGS_CC = -std=c++17
 
 DEBUG_FLAGS = -Wall -Wextra -Werror
 POSIX_FLAG = -D_POSIX_C_SOURCE=201706L
@@ -47,11 +50,11 @@ POSIX_FLAG = -D_POSIX_C_SOURCE=201706L
 VALG_FLAGS = -g
 COV_FLAGS =-fprofile-arcs -ftest-coverage
 
-CHLIB = -lcheck
-MATHLIB = -lm
-GTEST_FLAGS = -L/usr/lib/ -lgtest -lgtest_main -pthread #-Wl,--no-warn-search-mismatch
+CHECK_LIB = -lcheck
+MATH_LIB = -lm
+GTEST_LIB = -L/usr/lib/ -lgtest -lgtest_main -pthread #-Wl,--no-warn-search-mismatch
 
-NCURLIB = -lncurses
+NCURSES_LIB = -lncurses
 
 LIBFLAGS= 
 ifeq ($(OS), Linux)
@@ -60,19 +63,169 @@ endif
 
 # Checkers
 VALG = valgrind --tool=memcheck  --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=$(VALG_FILE) ./
-CPPCHECK = cppcheck --enable=all --suppress=missingIncludeSystem  --force --check-level=exhaustive --checkers-report=$(CPPCHECK_FILE) 
+CPPCHECK = cppcheck --enable=all --suppress=missingIncludeSystem  --force --check-level=exhaustive #--checkers-report=$(CPPCHECK_FILE) 
 CLANG = clang-format --style=Google
 
 # directories 
-BUILD_DIR = ../build
-TETRIS_DIR=brick_game/tetris
-TEST_DIR=../tests
-OBJ_DIR = $(BUILD_DIR)/service_files
-COV_DIR = $(BUILD_DIR)/coverage
-VALG_FILE = $(BUILD_DIR)/RESULT_VALGRIND.txt
-CPPCHECK_FILE = $(BUILD_DIR)/RESULT_CPPCHECK.txt
-GAME_DIR = $(BUILD_DIR)/Game
-GENDOC_DIR = ../materials/gen_docs
-DIST_DIR = $(BUILD_DIR)/distribution
-CUI_DIR = gui/cli
-GUI_DIR = gui/desktop
+ROOT_DIR = ..
+SRC_DIR=$(ROOT_DIR)/src
+BUILD_DIR = $(ROOT_DIR)/build
+# OBJ_DIR = $(BUILD_DIR)/service_files
+# COV_DIR = $(BUILD_DIR)/coverage
+
+TETRIS_DIR=$(SRC_DIR)/brick_game/tetris
+SNAKE_DIR=$(SRC_DIR)/brick_game/snake
+TEST_DIR=$(ROOT_DIR)/tests
+TUI_DIR = $(SRC_DIR)/gui/cli
+GUI_DIR = $(SRC_DIR)/src/gui/desktop
+
+GUI_EXE_DIR = $(BUILD_DIR)/Game_GUI
+TUI_EXE_DIR = $(BUILD_DIR)/Game_TUI
+GUI_SAVE_DIR = $(GUI_EXE_DIR)/saves
+TUI_SAVE_DIR = $(TUI_EXE_DIR)/saves
+GENDOC_DIR = $(ROOT_DIR)/materials/gen_docs
+
+DIR ?= $(BUILD_DIR)
+DIST_DIR = $(DIR)/distribution
+
+# src files
+TUI_HEADER=$(TUI_DIR)/tui.h
+TUI_SRC_FILES = $(shell find $(TUI_DIR)/ -type  f -name '*.c')
+TUI_HEAD_FILES = $(shell find $(TUI_DIR)/ -type f -name '*.h')
+GUI_HEADER=$(GUI_DIR)/gui.h
+GUI_SRC_FILES = $(shell find $(GUI_DIR)/ -type  f -name '*.c')
+GUI_HEAD_FILES = $(shell find $(GUI_DIR)/ -type f -name '*.h')
+
+# gen files
+TUI_OBJ_FILES = $(addprefix $(OBJ_DIR)/,  $(TUI_SRC_FILES:.c=.o))
+GUI_OBJ_FILES = $(addprefix $(OBJ_DIR)/,  $(GUI_SRC_FILES:.c=.o))
+VALG_FILE = $(BUILD_DIR)/RESULT_VALGRIND_ui.txt
+CPPCHECK_FILE_tui = $(BUILD_DIR)/RESULT_CPPCHECK_tui.txt
+CPPCHECK_FILE_gui = $(BUILD_DIR)/RESULT_CPPCHECK_gui.txt
+
+# game files
+MAIN_EXE = game_5
+DATA_FILE_FIRST = high_score_$(FIRST).txt
+DATA_FILE_SECOND = high_score_$(SECOND).txt
+
+#game list
+FIRST = tetris
+FIRST_TEST = tetris_test
+FIRST_LIB = $(BUILD_DIR)/$(FIRST).a
+SECOND = snake
+SECOND_TEST = snake_test
+SECOND_LIB = $(BUILD_DIR)/$(SECOND).a
+
+# extra files
+DOXYFILE = $(ROOT_DIR)/materials/Doxyfile
+
+# target specific variables
+install_tui: MAIN_FLAGS:= $(LAN_FLAGS_C) $(POSIX_FLAG) $(DEBUG_FLAGS) #$(VALG_FLAGS)
+install_tui: LIBFLAGS:= $(LIB_FLAG) $(NCURSES_LIB)
+install_tui: CC:= $(C)
+install_tui: SAVE_DIR= $(TUI_SAVE_DIR)
+install_tui uninstall_tui run_tui: DIR:= $(TUI_EXE_DIR)
+
+cpp_check_tui: CPPCHECK:= $(CPPCHECK) --checkers-report=$(CPPCHECK_FILE_tui)
+cpp_check_gui: CPPCHECK:= $(CPPCHECK) --checkers-report=$(CPPCHECK_FILE_gui)
+
+# ----------------------------------------------------------------------
+# targets
+.PHONY: all
+
+all: install run
+
+# libraries
+.PHONY: $(FIRST) $(SECOND)
+
+$(FIRST):
+	@cd $(TETRIS_DIR) && $(MAKE) all
+
+$(SECOND):
+	@cd $(SNAKE_DIR) && $(MAKE) all
+
+# tests
+.PHONY: test $(FIRST_TEST) $(SECOND_TEST)
+
+# the gui part
+.PHONY: install_gui run_gui uninstall_gui
+
+# the tui part
+.PHONY: intrall_tui run_tui uninstall_tui
+
+install_tui:$(TUI_SAVE_DIR) $(DATA_FILE_FIRST) $(DATA_FILE_SECOND) $(FIRST)#$(SECOND)
+	$(CC) $(MAIN_FLAGS) $(TUI_SRC_FILES) -o $(TUI_EXE_DIR)/$(MAIN_EXE)  $(FIRST_LIB) $(LIBFLAGS)
+	@rm -fr $(FIRST_LIB)
+	@if [ "$(DIR)" != "$(TUI_EXE_DIR)" ]; then \
+		mkdir -p $(DIR); \
+		mv $(TUI_EXE_DIR)/* $(DIR)/; \
+		echo "rm -fr *" > $(DIR)/uninstall.sh; \
+		$(MAKE) clean_tui; \
+	fi
+	@echo "\n\nTUI version is installed in" && cd $(DIR) && pwd
+
+uninstall_tui: 
+	rm -fr $(DIR)
+
+run_tui: 
+	@cd $(DIR) && ./$(MAIN_EXE)
+
+rebuild_tui: clean_tui tui
+
+rerun_tui: rebuild_tui run 
+
+# checkers 
+.PHONY: style_make style_check cpp_check
+style_make:
+	$(CLANG) -i $(shell find . -type f -name '*.cc' -o -name '*.hpp' -o -name '*.tpp' -o -name '*.h' -o -name '*.c')
+
+style_check: 
+	$(CLANG) -n $(shell find . -type f -name '*.cc' -o -name '*.hpp' -o -name '*.tpp' -o -name '*.h' -o -name '*.c')
+
+cpp_check_tui:
+	$(CPPCHECK) $(TUI_HEAD_FILES) $(TUI_SRC_FILES)
+
+cpp_check_gui:
+	$(CPPCHECK) $(GUI_HEAD_FILES) $(GUI_SRC_FILES)	
+
+cpp_check: cpp_check_tui cpp_check_gui
+	@cd $(TETRIS_DIR) && $(MAKE) cpp_check
+
+# 				Valgrind check
+
+# documentation
+
+# distribution
+
+# .PHONY: dist
+
+# dist: $(DIST_DIR) $(TETRIS_DIR) $(GUI_DIR) $(DOC_DIR)
+# 	tar -czf $(DIST_DIR)/$(PROJECT_NAME)-$(VERSION).tar.gz $(TETRIS_DIR) $(GUI_DIR) $(DOC_DIR) Makefile
+
+# dist_all: $(DIST_DIR) $(TEST_DIR) $(TETRIS_DIR) $(GUI_DIR)
+# 	tar -czf $(DIST_DIR)/$(PROJECT_NAME)-$(VERSION)-f.tar.gz $(TEST_DIR) $(TETRIS_DIR) $(GUI_DIR) $(DOC_DIR) Makefile
+
+
+# service
+.PHONY: clean
+
+$(BUILD_DIR) $(GUI_EXE_DIR) $(TUI_EXE_DIR) $(TUI_SAVE_DIR) $(GUI_SAVE_DIR) $(GENDOC_DIR) $(DIST_DIR) :
+	@mkdir -p $@
+
+$(DATA_FILE_FIRST) $(DATA_FILE_SECOND): $(SAVE_DIR)
+	@touch $(SAVE_DIR)/$@
+
+clean_tui: 
+	@rm -fr $(TUI_EXE_DIR)
+
+clean:
+	@rm -fr $(BUILD_DIR) $(GENDOC_DIR) $(DIST_DIR) $(DIR) 
+
+
+
+
+
+
+
+
+
