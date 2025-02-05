@@ -44,9 +44,9 @@ COV_FLAGS =-fprofile-arcs -ftest-coverage
 CHLIB = -lcheck
 MATHLIB = -lm
 
-LIBFLAGS= 
+LIB_FLAGS= 
 ifeq ($(OS), Linux)
-	LIBFLAGS += -lsubunit
+	LIB_FLAGS += -lsubunit
 endif
 
 # Checkers
@@ -66,7 +66,9 @@ GEN_DOC_DIR = $(ROOT_DIR)/materials/gen_docs
 # src files
 MAIN_HEADER=tetris.h
 SRC_FILES = $(shell find . -type  f -name '*.c')
+SRC_FILES := $(patsubst ./%, %, $(SRC_FILES))
 HEAD_FILES = $(shell find . -type f -name '*.h')
+HEAD_FILES := $(patsubst ./%, %, $(HEAD_FILES))
 
 # gen files
 # OBJ_FILES = $(addprefix $(OBJ_DIR)/, $(notdir $(SRC_FILES:.c=.o)))

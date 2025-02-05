@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../brick_game/tetris/tetris.h"
+#include "../src/brick_game/tetris/tetris.h"
 
 // elevator    service ff
 /* print the whole fieal with the curret piece
