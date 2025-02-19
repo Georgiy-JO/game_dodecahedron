@@ -38,7 +38,7 @@ LAN_FLAGS_C = -std=c11
 DEBUG_FLAGS = -Wall -Wextra -Werror
 POSIX_FLAG = -D_POSIX_C_SOURCE=201706L
 
-VALG_FLAGS = -g
+INFO_FLAGS = -g -O0
 COV_FLAGS =-fprofile-arcs -ftest-coverage
 
 CHLIB = -lcheck
@@ -59,7 +59,7 @@ ROOT_DIR = ../../..
 BUILD_DIR = $(ROOT_DIR)/build
 TEST_DIR=$(ROOT_DIR)/tests
 OBJ_DIR = $(BUILD_DIR)/service_files
-COV_DIR = $(BUILD_DIR)/coverage
+BUILD_COV_DIR = $(BUILD_DIR)/coverage
 CPPCHECK_FILE = $(BUILD_DIR)/RESULT_CPPCHECK_te-tris.txt
 GEN_DOC_DIR = $(ROOT_DIR)/materials/gen_docs
 
@@ -80,8 +80,9 @@ LIB_COV_NAME=$(MAIN_HEADER:.h=.cov.a)
 DOXYFILE = $(ROOT_DIR)/materials/Doxyfile
 
 # target specific variables
-$(LIB_NAME): MAIN_FLAGS:= $(LAN_FLAGS_C) $(DEBUG_FLAGS) $(POSIX_FLAG) #$(VALG_FLAGS)
+$(LIB_NAME): MAIN_FLAGS:= $(LAN_FLAGS_C) $(DEBUG_FLAGS) $(POSIX_FLAG)
 $(LIB_COV_NAME): MAIN_FLAGS:=  $(LAN_FLAGS_C) $(DEBUG_FLAGS) $(POSIX_FLAG) $(COV_FLAGS)
+cov: MAIN_FLAGS:= $(LAN_FLAGS_C) $(DEBUG_FLAGS) $(POSIX_FLAG) $(INFO_FLAGS) $(COV_FLAGS)
 
 # ----------------------------------------------------------------------
 # targets
@@ -96,13 +97,18 @@ $(LIB_NAME): clear_o $(OBJ_DIR) $(OBJ_FILES)
 	@mv  $(LIB_NAME) $(BUILD_DIR)/$(LIB_NAME) 
 	$(SELF) clear_o         
 
+# coverage library
+.PHONY: cov
+cov: clear_o $(OBJ_DIR) $(OBJ_FILES) $(BUILD_COV_DIR)
+	ar rcs $(LIB_NAME) $(OBJ_FILES) 
+	@mv  $(LIB_NAME) $(BUILD_DIR)/$(LIB_NAME) 
+#	@find $(OBJ_DIR) -name "*.gcno" -exec mv {} $(BUILD_COV_DIR)/ \;
+#	$(SELF) clear_o  
+
 # object files
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
 	@$(C) $(MAIN_FLAGS) -c $< -o $@
-
-# $(OBJ_DIR)/%.o: */%.c
-# 	@$(C) $(MAIN_FLAGS) -c $< -o $@
 
 #checkers 
 .PHONY: style_make style_check cpp_check
@@ -124,7 +130,7 @@ dvi:
 # service
 .PHONY: clean clean_doc rebuild_lib help
 
-$(OBJ_DIR) $(BUILD_DIR) $(COV_DIR) $(GEN_DOC_DIR):
+$(OBJ_DIR) $(BUILD_DIR) $(BUILD_COV_DIR) $(GEN_DOC_DIR):
 	@mkdir -p $@
 
 clear_o: 
@@ -151,3 +157,4 @@ help target:
 	clean  \n\
 	clean_doc  \n\
 	rebuild_lib"
+	

@@ -86,9 +86,9 @@ TUI_HEAD_FILES = $(shell find $(TUI_DIR)/ -type f -name '*.h')
 TUI_HEAD_FILES := $(patsubst ./%, %, $(TUI_HEAD_FILES))
 GUI_HEADER=$(GUI_DIR)/gui.h
 GUI_SRC_FILES = $(shell find $(GUI_DIR)/ -type  f -name '*.c')
-GUI_SRC_FILES := $(patsubst ./%, %, $(GUI_SRC_FILES))
+# GUI_SRC_FILES := $(patsubst ./%, %, $(GUI_SRC_FILES))
 GUI_HEAD_FILES = $(shell find $(GUI_DIR)/ -type f -name '*.h')
-GUI_HEAD_FILES := $(patsubst ./%, %, $(GUI_HEAD_FILES))
+# GUI_HEAD_FILES := $(patsubst ./%, %, $(GUI_HEAD_FILES))
 
 # gen files
 CPPCHECK_FILE_tui = $(BUILD_DIR)/RESULT_CPPCHECK_tui.txt
@@ -165,6 +165,9 @@ rebuild_tui: clean_tui tui
 
 rerun_tui: rebuild_tui run 
 
+# main part
+install: install_gui
+
 # checkers 
 .PHONY: style_make style_check cpp_check
 style_make:
@@ -211,12 +214,3 @@ clean_tui:
 
 clean:
 	@rm -fr $(BUILD_DIR) $(GENDOC_DIR) $(DIST_DIR) $(DIR) 
-
-
-
-
-
-
-
-
-
