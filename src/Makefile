@@ -13,7 +13,26 @@
 #	
 #
 # Key Targets:
-#   all / tetris.a	- Builds the libraty (default target).
+#   all 			- Install GUI and TUI versions into the default 
+#					  	location (/build) and run the GUI version.
+#	install			- Install GUI and TUI versions in the default location 
+#						(/build).
+#	run 			- Run the GUI version.
+#	uninstall		- Uninstall the GUI and TUI versions.
+#	intrall_tui 	- Install TUI version in the default location (/build).
+#	run_tui 		- Run the TUI version (will work only if it is installed).
+#	uninstall_tui	- Uninstall TUI version.
+#	rerun_tui		- Rebuild and run TUI version.
+#	test			- Build and run all libraries tests.
+#	test_tetris 	- Build and run tetris library tests.
+#   gcov_report		- Create a html report of the executed tests.
+#   report			- Create a html report of the executed tests and open it in the default browser.
+#   clean    		- Removes all build artifacts and created files.
+#   valgrind		- run all tests with valgrind and write the results to a file.
+#   style_check    	- Runs a style check of all code files.
+# 	style_make		- Change all code files so they passe style checks (Google st.).
+# 	cpp_check		- Check all code files with CppCheck tool.
+#	help 			- List of targets.
 #
 # Usage:
 #   make target
@@ -53,7 +72,7 @@ ifeq ($(OS), Linux)
 endif
 
 # Checkers
-CPPCHECK = cppcheck --enable=all --suppress=missingIncludeSystem  --force --check-level=exhaustive #--checkers-report=$(CPPCHECK_FILE) 
+CPPCHECK = cppcheck --enable=all --suppress=missingIncludeSystem --force --check-level=exhaustive 
 CLANG = clang-format --style=Google
 
 # directories 
@@ -61,13 +80,11 @@ ROOT_DIR = ..
 SRC_DIR=$(ROOT_DIR)/src
 TEST_DIR=$(ROOT_DIR)/tests
 BUILD_DIR = $(ROOT_DIR)/build
-# OBJ_DIR = $(BUILD_DIR)/service_files
-# COV_DIR = $(BUILD_DIR)/coverage
 
 FIRST_DIR=$(SRC_DIR)/brick_game/tetris
 SECOND_DIR=$(SRC_DIR)/brick_game/snake
 TUI_DIR = $(SRC_DIR)/gui/cli
-GUI_DIR = $(SRC_DIR)/src/gui/desktop
+GUI_DIR = $(SRC_DIR)/gui/desktop
 
 GUI_EXE_DIR = $(BUILD_DIR)/Game_GUI
 TUI_EXE_DIR = $(BUILD_DIR)/Game_TUI
@@ -101,7 +118,7 @@ DATA_FILE_SECOND = high_score_$(SECOND).txt
 
 #game list
 FIRST = tetris
-FIRST_TEST = tetris_test
+FIRST_TEST = test_tetris
 FIRST_LIB = $(BUILD_DIR)/$(FIRST).a
 SECOND = snake
 SECOND_TEST = snake_test
@@ -117,8 +134,8 @@ install_tui: CC:= $(C)
 install_tui: SAVE_DIR= $(TUI_SAVE_DIR)
 install_tui uninstall_tui run_tui: DIR:= $(TUI_EXE_DIR)
 
-cpp_check_tui: CPPCHECK:= $(CPPCHECK) --checkers-report=$(CPPCHECK_FILE_tui)
-cpp_check_gui: CPPCHECK:= $(CPPCHECK) --checkers-report=$(CPPCHECK_FILE_gui)
+#cpp_check_tui: CPPCHECK:= $(CPPCHECK) --checkers-report=$(CPPCHECK_FILE_tui)
+#cpp_check_gui: CPPCHECK:= $(CPPCHECK) --checkers-report=$(CPPCHECK_FILE_gui)
 
 # ----------------------------------------------------------------------
 # targets
@@ -135,14 +152,29 @@ $(FIRST):
 $(SECOND):
 	@cd $(SECOND_DIR) && $(MAKE) all
 
-# tests
-.PHONY: test $(FIRST_TEST) $(SECOND_TEST)
+# test and report
+.PHONY: test $(FIRST_TEST) $(SECOND_TEST) gcov_report report
+
+test:
+	@cd $(TEST_DIR) && $(MAKE) all
+
+$(FIRST_TEST):
+	@cd $(TEST_DIR) && $(MAKE) $(FIRST_TEST)
+
+$(SECOND_TEST):
+	@cd $(TEST_DIR) && $(MAKE) $(SECOND_TEST)
+
+gcov_report:
+	@cd $(TEST_DIR) && $(MAKE) gcov_report
+
+report:
+	@cd $(TEST_DIR) && $(MAKE) report
 
 # the gui part
 .PHONY: install_gui run_gui uninstall_gui
 
 # the tui part
-.PHONY: intrall_tui run_tui uninstall_tui
+.PHONY: intrall_tui run_tui uninstall_tui rerun_tui
 
 install_tui:$(TUI_SAVE_DIR) $(DATA_FILE_FIRST) $(DATA_FILE_SECOND) $(FIRST)#$(SECOND)
 	$(CC) $(MAIN_FLAGS) $(TUI_SRC_FILES) -o $(TUI_EXE_DIR)/$(MAIN_EXE)  $(FIRST_LIB) $(LIB_FLAGS)
@@ -166,15 +198,22 @@ rebuild_tui: clean_tui tui
 rerun_tui: rebuild_tui run 
 
 # main part
-install: install_gui
+.PHONY:  install run uninstall
+install: install_tui #install_gui
+
+run: install run_gui
+
+uninstall: uninstall_tui #uninstall_gui
 
 # checkers 
-.PHONY: style_make style_check cpp_check
+.PHONY: style_make style_check cpp_check valgrind
 style_make:
-	$(CLANG) -i $(shell find . -type f -name '*.cc' -o -name '*.hpp' -o -name '*.tpp' -o -name '*.h' -o -name '*.c')
+	$(CLANG) -i $(shell find ../ -type f -name '*.cc' -o -name '*.hpp' -o -name '*.tpp' -o -name '*.h' -o -name '*.c')
+	@cd $(TEST_DIR) && $(MAKE) style_make
 
 style_check: 
-	$(CLANG) -n $(shell find . -type f -name '*.cc' -o -name '*.hpp' -o -name '*.tpp' -o -name '*.h' -o -name '*.c')
+	$(CLANG) -n $(shell find ../ -type f -name '*.cc' -o -name '*.hpp' -o -name '*.tpp' -o -name '*.h' -o -name '*.c')
+	@cd $(TEST_DIR) && $(MAKE) style_check
 
 cpp_check_tui:
 	$(CPPCHECK) $(TUI_HEAD_FILES) $(TUI_SRC_FILES)
@@ -182,10 +221,49 @@ cpp_check_tui:
 cpp_check_gui:
 	$(CPPCHECK) $(GUI_HEAD_FILES) $(GUI_SRC_FILES)	
 
-cpp_check: cpp_check_tui cpp_check_gui
+cpp_check: cpp_check_tui #cpp_check_gui
 	@cd $(FIRST_DIR) && $(MAKE) cpp_check
+	@cd $(TEST_DIR) && $(MAKE) cpp_check
 
-# 				Valgrind check
+valgrind:
+	@cd $(TEST_DIR) && $(MAKE) valgrind_test
+
+# service
+.PHONY: clean help
+
+$(BUILD_DIR) $(GUI_EXE_DIR) $(TUI_EXE_DIR) $(TUI_SAVE_DIR) $(GUI_SAVE_DIR) $(GENDOC_DIR) $(DIST_DIR) :
+	@mkdir -p $@
+
+$(DATA_FILE_FIRST) $(DATA_FILE_SECOND): $(SAVE_DIR)
+	@touch $(SAVE_DIR)/$@
+
+clean_tui: 
+	@rm -fr $(TUI_EXE_DIR)
+
+clean:
+	@rm -fr $(BUILD_DIR) $(GENDOC_DIR) $(DIST_DIR) $(DIR) 
+
+help target:
+	@echo "Main targets are: \n\
+	all  \n\
+	install \n\
+	run \n\
+	uninstall \n\
+	intrall_tui \n\
+	run_tui \n\
+	uninstall_tui \n\
+	rerun_tui \n\
+	test \n\
+	test_tetris \n\
+	gcov_report  \n\
+	report  \n\
+	style_make  \n\
+	style_check  \n\
+	cpp_check  \n\
+	valgrind \n\
+	clean  \n\
+	help"	
+
 
 # documentation
 
@@ -199,18 +277,3 @@ cpp_check: cpp_check_tui cpp_check_gui
 # dist_all: $(DIST_DIR) $(TEST_DIR) $(TETRIS_DIR) $(GUI_DIR)
 # 	tar -czf $(DIST_DIR)/$(PROJECT_NAME)-$(VERSION)-f.tar.gz $(TEST_DIR) $(TETRIS_DIR) $(GUI_DIR) $(DOC_DIR) Makefile
 
-
-# service
-.PHONY: clean
-
-$(BUILD_DIR) $(GUI_EXE_DIR) $(TUI_EXE_DIR) $(TUI_SAVE_DIR) $(GUI_SAVE_DIR) $(GENDOC_DIR) $(DIST_DIR) :
-	@mkdir -p $@
-
-$(DATA_FILE_FIRST) $(DATA_FILE_SECOND): $(SAVE_DIR)
-	@touch $(SAVE_DIR)/$@
-
-clean_tui: 
-	@rm -fr $(TUI_EXE_DIR)
-
-clean:
-	@rm -fr $(BUILD_DIR) $(GENDOC_DIR) $(DIST_DIR) $(DIR) 

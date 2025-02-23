@@ -13,12 +13,13 @@
 #
 # Key Targets:
 #   all / tetris.a	- Builds the libraty (default target).
+#	cov				- create a version of library for coverage check.
 #   clean    		- Removes all build artifacts.
-#   style_check    	- Runs result of style checks of the library code.
-#!   dvi    			- Creates documentation for the library.
-#	clean_doc		- Removes documentation artifacts.
+#   style_check    	- Runs a style check of the library code.
 # 	style_make		- Change code so it passes style checks (Google st.).
 # 	cpp_check		- Check the library code with CppCheck tool.
+#!   dvi    			- Creates documentation for the library.
+#	clean_div		- Removes documentation artifacts.
 #	rebuild_lib		- Rebuild the library.
 #	help 			- List of targets.
 #
@@ -51,7 +52,7 @@ endif
 
 # Checkers
 # Valgrind check can be found in test file
-CPPCHECK = cppcheck --enable=all --suppress=missingIncludeSystem  --force --check-level=exhaustive --checkers-report=$(CPPCHECK_FILE) 
+CPPCHECK = cppcheck --enable=all --suppress=missingIncludeSystem  --force --check-level=exhaustive #--checkers-report=$(CPPCHECK_FILE) 
 CLANG = clang-format --style=Google
 
 # directories 
@@ -102,8 +103,6 @@ $(LIB_NAME): clear_o $(OBJ_DIR) $(OBJ_FILES)
 cov: clear_o $(OBJ_DIR) $(OBJ_FILES) $(BUILD_COV_DIR)
 	ar rcs $(LIB_NAME) $(OBJ_FILES) 
 	@mv  $(LIB_NAME) $(BUILD_DIR)/$(LIB_NAME) 
-#	@find $(OBJ_DIR) -name "*.gcno" -exec mv {} $(BUILD_COV_DIR)/ \;
-#	$(SELF) clear_o  
 
 # object files
 $(OBJ_DIR)/%.o: %.c
@@ -128,7 +127,7 @@ dvi:
 	@echo "project documentation can be found in $(GEN_DOC_DIR)"
 
 # service
-.PHONY: clean clean_doc rebuild_lib help
+.PHONY: clean clean_div rebuild_lib help
 
 $(OBJ_DIR) $(BUILD_DIR) $(BUILD_COV_DIR) $(GEN_DOC_DIR):
 	@mkdir -p $@
@@ -136,10 +135,10 @@ $(OBJ_DIR) $(BUILD_DIR) $(BUILD_COV_DIR) $(GEN_DOC_DIR):
 clear_o: 
 	@rm -fr $(OBJ_DIR)
 
-clean_doc:
+clean_div:
 	@rm -fr $(GEN_DOC_DIR)
 
-clear: clear_o clean_doc
+clear: clear_o clean_div
 	@rm -fr $(BUILD_DIR)
 
 clean: clear
@@ -155,6 +154,7 @@ help target:
 	cpp_check  \n\
 	dvi  \n\
 	clean  \n\
-	clean_doc  \n\
-	rebuild_lib"
+	clean_div  \n\
+	rebuild_lib \n\
+	help"
 	

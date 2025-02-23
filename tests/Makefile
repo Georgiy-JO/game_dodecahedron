@@ -8,7 +8,16 @@
 #	the Valgring check and creating the report of the executed tests.
 #
 # Key Targets:
-#   all / tetris.a	- Builds the libraty (default target).
+#   all / test		- Build and run all libraries tests.
+#	test_tetris 	- Build and run te-tris library tests.
+#   gcov_report		- Create a html report of the executed tests.
+#   report			- Create a html report of the executed tests and open it in the default browser.
+#   clean    		- Removes all build artifacts and created files.
+#   valgrind		- Run all tests with valgrind and write the results to a file.
+#   style_check    	- Runs a style check of test code files.
+# 	style_make		- Change code so it passes style checks (Google st.).
+# 	cpp_check		- Check the test files code with CppCheck tool.
+#	help 			- List of targets.
 #
 # Usage:
 #   make target
@@ -41,8 +50,13 @@ ifeq ($(OS), Linux)
 endif
 
 # Checkers
-VALG = valgrind --tool=memcheck  --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=$(VALG_FILE) ./
+VALG = valgrind --tool=memcheck  --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose 
 CLANG = clang-format --style=Google
+CPPCHECK = cppcheck --enable=all --suppress=missingIncludeSystem  --force --check-level=exhaustive
+VALG_FILE_FIRST_FLAG = --log-file=$(BUILD_DIR)/VALGRIND_tetris.txt
+VALG_FILE_SECOND_FLAG = --log-file=$(BUILD_DIR)/VALGRIND_snake.txt
+# CPPCHECK_FILE_FIRST_FLAG = --checkers-report=$(BUILD_DIR)/CPPCHECK_test_tetris.txt
+# CPPCHECK_FILE_SECOND_FLAG = --checkers-report=$(BUILD_DIR)/CPPCHECK_test_snake.txt
 
 # directories 
 ROOT_DIR = ..
@@ -55,11 +69,6 @@ BUILD_COV_DIR = $(BUILD_DIR)/coverage
 
 FIRST_DIR=$(SRC_DIR)/brick_game/tetris
 SECOND_DIR=$(SRC_DIR)/brick_game/snakes
-
-# gen files
-VALG_FILE = $(BUILD_DIR)/RESULT_VALGRIND_ui.txt
-CPPCHECK_FILE_tui = $(BUILD_DIR)/RESULT_CPPCHECK_tui.txt
-CPPCHECK_FILE_gui = $(BUILD_DIR)/RESULT_CPPCHECK_gui.txt
 
 # game files
 MAIN_EXE = game_5
@@ -85,10 +94,9 @@ $(FIRST_TEST): MAIN_FLAGS:= $(LAN_FLAGS_C) $(POSIX_FLAG) $(DEBUG_FLAGS)
 $(FIRST_TEST): LIB_FLAGS:= $(CHECK_LIB) $(LIB_FLAGS) $(MATH_LIB)
 $(FIRST_TEST): CC:= $(C)
 
-t_cov: MAIN_FLAGS:= $(LAN_FLAGS_C) $(POSIX_FLAG) $(DEBUG_FLAGS) $(INFO_FLAGS) $(COV_FLAGS)
-t_cov: LIB_FLAGS:= $(CHECK_LIB) $(LIB_FLAGS) $(MATH_LIB)
-t_cov: CC:= $(C)
-
+first_cov: MAIN_FLAGS:= $(LAN_FLAGS_C) $(POSIX_FLAG) $(DEBUG_FLAGS) $(INFO_FLAGS) $(COV_FLAGS)
+first_cov: LIB_FLAGS:= $(CHECK_LIB) $(LIB_FLAGS) $(MATH_LIB)
+first_cov: CC:= $(C)
 # ----------------------------------------------------------------------
 # targets
 .PHONY: all
@@ -108,7 +116,7 @@ $(SECOND):
 	@cd $(SECOND_DIR) && $(MAKE) all
 
 # tests
-.PHONY: test test_tetris test_snake
+.PHONY: test test_tetris #test_snake
 
 $(FIRST_TEST):clean $(BUILD_TEST_DIR) $(FIRST)
 	$(CC) $(MAIN_FLAGS) $(FIRST_TEST_SRC_FILES) -o $(BUILD_TEST_DIR)/$@ $(FIRST_LIB) $(LIB_FLAGS)
@@ -117,47 +125,78 @@ $(FIRST_TEST):clean $(BUILD_TEST_DIR) $(FIRST)
 test_tetris: $(FIRST_TEST)
 	@cd $(BUILD_TEST_DIR) && ./$(FIRST_TEST)
 
-test: test_tetris
+test: test_tetris #test_snake
 
 # coverage & report
-.PHONY:  gcov_report
+.PHONY:  gcov_report #s_cov_main 
 
-coverage: test_cov
-	gcov -b --object-directory=$(OBJ_DIR) $(SRC_FILES_TETRIS)  
-
-gcov_report: $(COV_DIR) coverage
-	@gcovr  --object-directory $(OBJ_DIR)  -r . --html --html-details --output=$(COV_DIR)/    
-	@make -s clear_gc
-	@make -s clear_o
-
-t_cov:clean $(BUILD_COV_DIR) $(FIRST_COV)
+first_cov:clean $(BUILD_COV_DIR) $(FIRST_COV)
 	$(CC) $(MAIN_FLAGS) $(FIRST_TEST_SRC_FILES) -o $(BUILD_COV_DIR)/$@ $(FIRST_LIB) $(LIB_FLAGS)
 	@rm -fr $(FIRST_LIB)
 
-t_cov_exe: t_cov
-	@cd $(BUILD_COV_DIR) && ./t_cov
+first_cov_exe: first_cov
+	@cd $(BUILD_COV_DIR) && ./first_cov
 
-t_cov_cov: t_cov_exe clean_cov $(BUILD_COV_DIR)
+first_cov_main: first_cov_exe clean_cov 
+	@$(MAKE) $(BUILD_COV_DIR)
 	lcov --capture --directory $(OBJ_DIR) --output-file $(BUILD_COV_DIR)/coverage.info
 	genhtml --output-directory=$(BUILD_COV_DIR) $(BUILD_COV_DIR)/coverage.info
-	#$(MAKE) clear_o
+	@$(MAKE) clean_o
 
+gcov_report: first_cov_main
 
+report: 
+	@if [ ! -f $(BUILD_COV_DIR)/index.html ]; then \
+    	$(MAKE) gcov_report; \
+	fi
+	@if [ "$(OS)" = "Linux" ]; then \
+		xdg-open $(BUILD_COV_DIR)/index.html; \
+	elif [ "$(OS)" = "Darwin" ]; then \
+		open $(BUILD_COV_DIR)/index.html; \
+	fi
 
+#checkers 
+.PHONY:  style_make style_check cpp_check valgrind_test
+
+style_make:
+	$(CLANG) -i $(shell find . -type f -name '*.cc' -o -name '*.hpp' -o -name '*.tpp' -o -name '*.h' -o -name '*.c')
+
+style_check: 
+	$(CLANG) -n $(shell find . -type f -name '*.cc' -o -name '*.hpp' -o -name '*.tpp' -o -name '*.h' -o -name '*.c')
+
+cpp_check:
+	$(CPPCHECK) $(CPPCHECK_FILE_FIRST_FLAG) $(FIRST_TEST_SRC_FILES)
+	$(CPPCHECK) $(CPPCHECK_FILE_SECOND_FLAG) $(SECOND_TEST_SRC_FILES)
+
+valgrind_test: $(FIRST_TEST)
+	$(VALG) $(VALG_FILE_FIRST_FLAG) ./$(BUILD_TEST_DIR)/$(FIRST_TEST)
+#	@cd $(BUILD_COV_DIR) && $(VALG) $(VALG_FILE_SECOND_FLAG) ./$(SECOND_TEST)
 
 # service
-.PHONY: clean
+.PHONY: clean help
 
-$(BUILD_DIR) $(BUILD_COV_DIR) $(BUILD_TEST_DIR):
+$(BUILD_DIR) $(BUILD_COV_DIR) $(BUILD_TEST_DIR) $(OBJ_DIR):
 	@mkdir -p $@
 
 clean_cov:
 	@rm -fr $(BUILD_COV_DIR)
 
-clear_o: 
+clean_o: 
 	@rm -fr $(OBJ_DIR)
 
 clean:
-	@rm -fr $(BUILD_DIR) $(COV_DIR)
+	@rm -fr $(BUILD_DIR) $(BUILD_COV_DIR)
 	
-	
+help target:
+	@echo "Main targets are: \n\
+	all  \n\
+	test \n\
+	test_tetris \n\
+	gcov_report  \n\
+	report  \n\
+	style_make  \n\
+	style_check  \n\
+	cpp_check  \n\
+	valgrind \n\
+	clean  \n\
+	help"	

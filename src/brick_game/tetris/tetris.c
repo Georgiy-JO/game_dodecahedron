@@ -378,7 +378,8 @@ void whenScoreChanges() {
   GameMain_t* core = structureKeeper();
   if (core->score >= MAX_SCORE || core->score < 0) core->score = MAX_SCORE;
   if (core->score > core->high_score) core->high_score = core->score;
-  if (core->score / LEVELING_SCORE >= 1) core->level = (core->score / LEVELING_SCORE) + 1;
+  if (core->score / LEVELING_SCORE >= 1)
+    core->level = (core->score / LEVELING_SCORE) + 1;
 }
 
 // (ノ ◑‿◑)ノ (I read ad score high score aka. work with files)

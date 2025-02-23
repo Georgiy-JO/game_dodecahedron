@@ -10,7 +10,7 @@
 |:<br> <br>  |The library has a function that accepts user input and a function that outputs a matrix that describes the current state of the playing field:<br> - void userInput(...)<br>- GameInfo_t updateCurrentState()||
 ||The program library code is located in the `src/brick_game/tetris` folder.|✔️(change "brick_game" folder name)|
 ||The program interface code is located in the `src/gui/cli` folder.|✔️️(gui->ui; cli ->tui) |
-||The program can be built using a Makefile with the standard set of targets for GNU-programs: *all*, *install*, *uninstall*, *clean*, *dvi*, *dist*, *test*, *gcov_report (and other). Installation directory can be arbitrary.||
+||The program can be built using a Makefile with the standard set of targets for GNU-programs: *all*, *install*, *uninstall*, *clean*, *dvi*, *dist*, *test*, *gcov_report* (and other). Installation directory can be arbitrary.||
 ||Code is written in Google Style.||
 ||Full coverage of the library with unit tests, using the `check` library is prepared (inc tests can be run on Darwin/Ubuntu OS). The coverage of the library with game logic with tests is 80+ percent.||
 |:<br><br><br><br><br><br><br><br>|The following mechanics are in the game:<br>  - Rotation of pieces;<br>  - Moving pieces horizontally;<br>   - Acceleration of the piece's fall (when the button is pressed, the figure moves all the way down);<br>  - Display of the next piece;<br>  - Destruction of filled raws;<br>  - End of the game when the top border of the playing field is reached;<br>   - Include [all sorts of pieces]( /misc/images/Tetrinos.png) from the original game.<br> - After reaching the lower boundary of the field or contacting another figure, the figure stops. After that, the next piece, shown in the preview, is generated.||
