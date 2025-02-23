@@ -15,18 +15,23 @@
 # Key Targets:
 #   all 			- Install GUI and TUI versions into the default 
 #					  	location (/build) and run the GUI version.
-#	install			- Install GUI and TUI versions in the default location 
-#						(/build).
+#	install			- Install GUI and TUI versions in the default 
+#						location (/build). Installation directory can 
+#						be set by adding "DIR=pwd/location" to the command).
 #	run 			- Run the GUI version.
-#	uninstall		- Uninstall the GUI and TUI versions.
-#	intrall_tui 	- Install TUI version in the default location (/build).
+#	uninstall		- Uninstall the GUI and TUI versions from the 
+#						default location only.
+#	intrall_tui 	- Install TUI version in the default location 
+#						(/build). Installation directory can be set by
+#						adding "DIR=pwd/location" to the command).
 #	run_tui 		- Run the TUI version (will work only if it is installed).
 #	uninstall_tui	- Uninstall TUI version.
 #	rerun_tui		- Rebuild and run TUI version.
 #	test			- Build and run all libraries tests.
 #	test_tetris 	- Build and run tetris library tests.
 #   gcov_report		- Create a html report of the executed tests.
-#   report			- Create a html report of the executed tests and open it in the default browser.
+#   report			- Create a html report of the executed tests and open 
+#						it in the default browser.
 #   clean    		- Removes all build artifacts and created files.
 #   valgrind		- run all tests with valgrind and write the results to a file.
 #   style_check    	- Runs a style check of all code files.
@@ -132,7 +137,7 @@ install_tui: MAIN_FLAGS:= $(LAN_FLAGS_C) $(POSIX_FLAG) $(DEBUG_FLAGS)
 install_tui: LIB_FLAGS:= $(LIB_FLAG) $(NCURSES_LIB)
 install_tui: CC:= $(C)
 install_tui: SAVE_DIR= $(TUI_SAVE_DIR)
-install_tui uninstall_tui run_tui: DIR:= $(TUI_EXE_DIR)
+install_tui run_tui: DIR:= $(TUI_EXE_DIR)
 
 #cpp_check_tui: CPPCHECK:= $(CPPCHECK) --checkers-report=$(CPPCHECK_FILE_tui)
 #cpp_check_gui: CPPCHECK:= $(CPPCHECK) --checkers-report=$(CPPCHECK_FILE_gui)
@@ -188,7 +193,7 @@ install_tui:$(TUI_SAVE_DIR) $(DATA_FILE_FIRST) $(DATA_FILE_SECOND) $(FIRST)#$(SE
 	@echo "\n\nTUI version is installed in" && cd $(DIR) && pwd
 
 uninstall_tui: 
-	rm -fr $(DIR)
+	rm -fr $(TUI_EXE_DIR)
 
 run_tui: 
 	@cd $(DIR) && ./$(MAIN_EXE)

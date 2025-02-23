@@ -14,11 +14,15 @@
 # Key Targets:
 #   all 			- Install GUI and TUI versions into the default 
 #					  	location (/build) and run the GUI version.
-#	install			- Install GUI and TUI versions in the default location 
-#						(/build).
+#	install			- Install GUI and TUI versions in the default 
+#						location (/build). Installation directory can 
+#						be set by adding "DIR=pwd/location" to the command).
 #	run 			- Run the GUI version.
-#	uninstall		- Uninstall the GUI and TUI versions.
-#	intrall_tui 	- Install TUI version in the default location (/build).
+#	uninstall		- Uninstall the GUI and TUI versions from the 
+#						default location only.
+#	intrall_tui 	- Install TUI version in the default location 
+#						(/build). Installation directory can be set by
+#						adding "DIR=pwd/location" to the command).
 #	run_tui 		- Run the TUI version (will work only if it is installed).
 #	uninstall_tui	- Uninstall TUI version.
 #	test			- Build and run all libraries tests.

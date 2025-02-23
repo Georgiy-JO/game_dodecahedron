@@ -213,6 +213,9 @@ void playerAction(GameMain_t* core, UserAction_t action) {
     case Action:
       if (core->state == st_GoingOn) pressAction(core);
       break;
+    case Up:
+      if (core->state == st_GoingOn) pressAction(core);
+      break;
     default:
       break;
   }
@@ -389,7 +392,7 @@ int highScoreKeeper(char choice) {
   int output = 0;
   switch (choice) {
     case 0:
-      scoretable = fopen("high_score.txt", "r");
+      scoretable = fopen("saves/high_score_tetris.txt", "r");
       if (scoretable == NULL)
         output = INPUT_ERROR;
       else {
@@ -399,7 +402,7 @@ int highScoreKeeper(char choice) {
       break;
     case 1:
       if (core->high_score <= core->score) {
-        scoretable = fopen("high_score.txt", "w");
+        scoretable = fopen("saves/high_score_tetris.txt", "w");
         if (scoretable == NULL)
           output = INPUT_ERROR;
         else {
