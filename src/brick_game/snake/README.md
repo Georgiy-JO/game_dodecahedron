@@ -30,8 +30,11 @@ The developed game library also can be connected to the console interface (simil
 
 Logic of the game is formalized using finite-state machine and has the following structure:
 
-![The_s-nake_FSM](/ " finite-state machine of The S-Snake")
+#### Classic snake FSM
+![The_classic_s-nake_FSM](/misc/images/FSM_classic_snake.png " finite-state machine of The S-Snake: Classic")
 
+#### Borderless snake FSM
+![The_borderless_s-nake_FSM](/misc/images/FSM_borderless_snake.png " finite-state machine of The S-Snake: Borderless")
 
 ### The Snake
 

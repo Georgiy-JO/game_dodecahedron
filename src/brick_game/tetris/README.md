@@ -54,3 +54,15 @@ Tetris is probably one of the most popular games for the Brickgame console. It's
 
 
 ## [The Te-tris specifications](/materials/Te-tris_check_list.md)
+
+## Notes
+* Idea for adjustment: rewrite code to make pieces different color. In order achieve that structure need to be changed a little:
+  1. **output_system.c**:*structureTranslator()* line 72: `outputField[i - hight_delta][j] = core->field[i][j] + core->piece.shape[i - core->piece.y][j - core->piece.x]*(core->piece.type+1);`
+  2. **tui.c**:*fullFieldPrinter* line 132: `game_info.field[i - 1][j - 1] != EMPTY`
+  3. **tui.c**:*fullFieldPrinter* line 133,136:
+   ```C
+    if (has_colors()) wattron(win_game, COLOR_PAIR(game_info.field[i - 1][j - 1]));
+    ...
+    if (has_colors()) wattroff(win_game, COLOR_PAIR(game_info.field[i - 1][j - 1]));
+   ```
+  4. Some adjustment to the collide function, so field's [i][j] will keep the value a piece had.
