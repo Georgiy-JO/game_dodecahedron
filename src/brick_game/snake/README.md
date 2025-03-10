@@ -51,3 +51,7 @@ The game was based on another game called Blockage. It had two players controlli
 
 ## [The S-Snake specifications](/materials/S-Snake_check_list.md)
 
+
+
+- moving food sounds interesting...
+- 
