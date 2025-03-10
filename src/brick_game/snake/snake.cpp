@@ -26,26 +26,26 @@ class RandomGenerator_{
 };
 
 class SnakeTimer_{
+  using clock = std::chrono::steady_clock;
   public:
     static constexpr int MAX_SPEED = 9; //from 0 to 9 - 10 speeds
   private:
-    static constexpr u_int SPEED_TO_INTERVAL [10]={1,2,3,4,5,6,7,8,9,10};
+    static constexpr u_int SPEED_TO_INTERVAL [10]={500,450,400,375,350,325,300,250,200,100};
 
-    using clock = std::chrono::steady_clock;
-    clock::time_point startTime;
-    clock::time_point lastUpdate;
+    // clock::time_point startTime;
+    clock::time_point last_update;
 
     int speed=0;
     
-    u_int getInterval();
   public:
   SnakeTimer_();
 
-  void setSpeed(int speed);
+  void setSpeed(u_int speed);
   void updateSpeed();
   int getSpeed();
   u_int getMovesNumber();
   void reset();
+  void totalReset();
 };
 
 
@@ -89,11 +89,13 @@ class snake_ {
     void snakeGrow();
     coords_t getHead();
     int getDirection();
+    void reset(int x_begining, int y_begining);
 };
 
 class food_{
   protected:
     coords_t position;
+    int VALUE =0;
   public:
     food_():position(0,0){}
     food_(u_int x, u_int y):position(x,y){}
@@ -101,6 +103,7 @@ class food_{
 
     void setPosition(u_int x, u_int y);
     coords_t getPosition();
+    int getValue();
 };
 
 class insect_: public food_{
@@ -133,6 +136,10 @@ class field_ {
     bool checkForFood();  //check if will happen
     bool checkForCrach(); //check if hammened
     void moveSnake ();
+    void snakeTurnRight();
+    void snakeTurnLeft();
+    int getFoodValue();
+    void reset();
 };
 
 class SnakeGame{
@@ -143,39 +150,52 @@ class SnakeGame{
     };
     enum GameState_t {
         st_Exit=-1,
-        st_Start,
+        // st_Start,
         st_Moving,
-        st_Turn,
-        st_Eat,
+        // st_Turn,
+        // st_Eat,
         st_GameOver,
-        st_Message,
+        // st_Message,
         st_Pause,
-        st_BorderTransfort
+        // st_BorderTransfort
+    };
+    enum UserActions_t {
+        ac_Start,
+        ac_Esc,
+        ac_Pause,
+        ac_Right,
+        ac_Left,
+        ac_Forvard
     };
   private:
     static constexpr char* save_file = "saves/high_score_snake.txt";
     static constexpr int SPEEDSTEP = 5;
 
+    SnakeTimer_ timer;
+
     field_ field;
-    // int speed=1;
     int score =0;
     int record_score;
     char game_type=Standart_snake;
-    GameState_t game_state=st_Start;
+    GameState_t game_state=st_Moving;
 
   public:
-    SnakeGame():field(), record_score(inputRecordScore()){}
-    SnakeGame(char type):SnakeGame() {game_type=type;}
+    SnakeGame();
+    SnakeGame(char type);
 
     const int inputRecordScore();
     void saveRecordScore();
     std::string saveNewRecord();
+    u_int getSpeed();
+    void updateScoreSpeed();
 
-    void gameStart();
+    void gameReStart();
     void gamePause();
+    void gameContinue();
     void gameOver();
     void moving();
-    void updateScoreSpeed();
+    void catchUpMovement();
+    void userActionHandler(int action);
 
 };
 
@@ -265,6 +285,13 @@ coords_t snake_::getHead(){
 int snake_::getDirection(){
   return direction;
 }
+void snake_::reset(int x_begining, int y_begining){
+  nodes.clear();
+  for(int i=0;i<4;i++){
+    nodes.push_back(node_(x_begining-i,y_begining));
+  } 
+  direction=Down;
+}
 
 // RandomGenerator_ functions
 RandomGenerator_::RandomGenerator_(u_int WIDTH_, u_int HEIGHT_):mt(std::chrono::steady_clock::now().time_since_epoch().count()), x_dist(0, WIDTH_-1), y_dist(0, HEIGHT_-1), bynary(0,1){}
@@ -282,13 +309,35 @@ char RandomGenerator_::getBinary(){
 }
 
 // SnakeTimer_ functions
-SnakeTimer_::SnakeTimer_(){}
-u_int SnakeTimer_::getInterval(){}
-void SnakeTimer_::setSpeed(int speed){}
-void SnakeTimer_::updateSpeed(){}
-int SnakeTimer_::getSpeed(){}
-u_int SnakeTimer_::getMovesNumber(){}
-void SnakeTimer_::reset(){}
+SnakeTimer_::SnakeTimer_():last_update(clock::now()){}
+void SnakeTimer_::setSpeed(u_int speed_){
+  if(speed_<10)
+  speed=speed_;
+}
+void SnakeTimer_::updateSpeed(){
+  if(speed<9)
+    speed++;
+}
+int SnakeTimer_::getSpeed(){
+  return speed;
+}
+u_int SnakeTimer_::getMovesNumber(){
+  auto time_now=clock::now();
+  auto time_delta=std::chrono::duration_cast<std::chrono::milliseconds>(time_now-last_update).count();
+  u_int moves_number=time_delta/SPEED_TO_INTERVAL[speed];
+  if(moves_number>0)
+    last_update+=std::chrono::milliseconds(moves_number*SPEED_TO_INTERVAL[speed]);
+  else
+    moves_number=0;
+  return moves_number;
+}
+void SnakeTimer_::reset(){
+  last_update=clock::now();
+}
+void SnakeTimer_::totalReset(){
+  speed=0;
+  reset();
+}
 
 // field_ functions
 field_::field_():snake(WIDTH/2, HEIGHT/2+2), rand_gen(WIDTH, HEIGHT), food(nullptr){ spawnFood();}
@@ -337,16 +386,33 @@ bool field_::checkForCrach(){
 void field_::moveSnake (){
   snake.snakeMove();
 }
+int field_::getFoodValue(){
+  return food->getValue();
+}
+void field_::snakeTurnRight(){
+  snake.changeDirection(snake.Right);
+}
+void field_::snakeTurnLeft(){
+  snake.changeDirection(snake.Left);
+}
+void field_::reset(){
+  snake.reset(WIDTH/2, HEIGHT/2+2);
+  spawnFood();
+}
 
 // food_ functions
 void food_::setPosition(u_int x, u_int y){position=std::pair{x,y};}
 coords_t food_::getPosition(){
   return position;
 }
-
+int food_::getValue(){
+  return VALUE;
+}
 
 
 // SnakeGame functions
+SnakeGame::SnakeGame():field(), record_score(inputRecordScore()){}
+SnakeGame::SnakeGame(char type):SnakeGame() {game_type=type;}
 const int SnakeGame::inputRecordScore(){
     std::ifstream ifs;
     ifs.open(save_file);
@@ -383,13 +449,13 @@ void SnakeGame::saveRecordScore(){
     std::rename(temp_file, save_file);
 }
 std::string SnakeGame::saveNewRecord(){
-    //??
+    // update in better version for github
     return "user_1";
 }
 void SnakeGame::updateScoreSpeed(){
-  score++;
-  if(score%SPEEDSTEP==0){
-    speed++;                                      //speed mechanics update!!!
+  score+=field.getFoodValue();                                //different score for different types of food
+  if(score/SPEEDSTEP>=timer.getSpeed()){
+    timer.updateSpeed();                                      //speed mechanics update!!!
   }
   if(score>=record_score)
     record_score=score;
@@ -400,17 +466,87 @@ void SnakeGame::moving(){
   field.moveSnake();
   if(field.checkForCrach())
     game_state=st_GameOver; 
+  if(score>=200)
+    game_state=st_GameOver;
+}
+u_int SnakeGame::getSpeed(){
+  return timer.getSpeed()+1;
+}
+void SnakeGame::catchUpMovement(){
+  if(game_state=st_Moving){
+    u_int move_number=timer.getMovesNumber();
+    for(u_int i=0;i<move_number;i++){
+      moving();
+    }
+  }
+}
+void SnakeGame::userActionHandler(int action){
+  switch(action){
+    case ac_Start:
+      if(game_state==st_GameOver)
+        gameReStart();
+      else if (game_state==st_Pause)
+        gameContinue();
+      break;
+    case ac_Esc:
+      if(game_state==st_Moving|| game_state==st_Pause)
+        gameOver();
+      if(game_state==st_GameOver)
+        game_state=st_Exit;               //handle
+    case ac_Pause:
+      if(game_state==st_Moving)
+        gamePause();
+      if(game_state==st_Pause)
+        gameContinue();
+      break;
+    case ac_Right:
+      if(game_state==st_Moving){
+        field.snakeTurnRight();
+        moving();
+      }
+      break;
+    case ac_Left:
+      if(game_state==st_Moving){
+        field.snakeTurnLeft();
+        moving();
+      }
+      break;
+    case ac_Forvard:
+      moving();                       //manage the pressing of the button
+      break;
+    default:
+      throw InputError();            // catch me
+      break;
+  }
+}
+void SnakeGame::gameReStart(){
+  field.reset();
+  timer.totalReset();
+  score=0;
+  record_score=inputRecordScore();
+  game_state=st_Moving;
+}
+void SnakeGame::gameOver(){
+  saveRecordScore();
+  game_state=st_GameOver;         //leaks here??
+}
+void SnakeGame::gamePause(){
+  game_state=st_Pause;
+}
+void SnakeGame::gameContinue(){
+  game_state=st_Moving;
+  timer.reset();
 }
 
 
 
 
-
-
-
-
-
-
+//solo standing function
+SnakeGame& gameInstanceKeeper(){
+  static SnakeGame game;
+  game.catchUpMovement();
+  return game;
+}
 
 
 
