@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include "../src/brick_game/snake/s-snake.hpp"
 
 TEST(TreeTest, Parent_MS) {
   my_containers::Tree<char, std::string> tree_ch_st{
@@ -17,10 +18,10 @@ TEST(TreeTest, Parent_MS) {
   EXPECT_EQ(tree_ch_st.getParentData('y'), 'd');
   EXPECT_EQ(tree_ch_st.getParentData('`'), 'b');
   EXPECT_EQ(tree_ch_st.getParentData('\n'), '(');
-  // tree_ch_st.crazyPrinter();
+
 }
 
-// int main(int argc, char** argv) {
-//   ::testing::InitGoogleTest(&argc, argv);
-//   return RUN_ALL_TESTS();
-// }
+int main(int argc, char** argv) {
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+}
