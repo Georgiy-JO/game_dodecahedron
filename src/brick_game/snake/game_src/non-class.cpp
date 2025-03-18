@@ -1,13 +1,13 @@
 
-#include "SnakeGame/SnakeGame.hpp"
-
+#include "S-snakeMain.h"
 
 namespace s21 {
-SnakeGame& gameInstanceKeeper(){
+const SnakeGame* gameInstanceKeeper() {
   static SnakeGame game;
-  game.catchUpMovement();
-  return game;
+  if(game.getGameState()==SnakeGame::st_Moving)
+    game.catchUpMovement();
+  if(game.getGameState()==SnakeGame::st_Exit)
+    return nullptr;
+  return &game;
 }
-}
-
-
+}  // namespace s21

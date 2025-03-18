@@ -3,31 +3,33 @@
 #include "../service.hpp"
 
 namespace s21 {
-    class food_{
-        protected:
-          coords_t position;
-          int VALUE =0;
-        public:
-          food_():position(0,0){}
-          food_(u_int x, u_int y):position(x,y){}
-          virtual ~food_() {}
-      
-          void setPosition(u_int x, u_int y);
-          coords_t getPosition();
-          int getValue();
-      };
-      
-      class insect_: public food_{
-          public:
-            static constexpr int VALUE =1;
-            insect_():food_(){}
-            insect_(u_int x, u_int y):food_(x,y){}
-      };
-      
-      class mouse_:public food_{
-          public:
-            static constexpr int VALUE =2;
-            mouse_():food_(){}
-            mouse_(u_int x, u_int y):food_(x,y){}
-      };
-}
+class food_ {
+ private:
+  coords_t position;
+  const int val;
+
+ public:
+  food_(int V=0);
+  food_(u_int x, u_int y, int V=0);
+
+  void setPosition(u_int x, u_int y);
+  coords_t getPosition() const;
+  int getValue() const;
+};
+
+class insect_ : public food_ {
+ private:
+ static constexpr int VALUE = 1;  
+ public:
+  insect_();
+  insect_(u_int x, u_int y);
+};
+
+class mouse_ : public food_ {
+  private:
+  static constexpr int VALUE = 2;
+ public:
+  mouse_();
+  mouse_(u_int x, u_int y);
+};
+}  // namespace s21

@@ -123,10 +123,10 @@ DATA_FILE_SECOND = high_score_$(SECOND).txt
 
 #game list
 FIRST = tetris
-FIRST_TEST = test_tetris
+FIRST_TEST = test_first
 FIRST_LIB = $(BUILD_DIR)/$(FIRST).a
 SECOND = snake
-SECOND_TEST = snake_test
+SECOND_TEST = test_second
 SECOND_LIB = $(BUILD_DIR)/$(SECOND).a
 
 # extra files
@@ -213,11 +213,11 @@ uninstall: uninstall_tui #uninstall_gui
 # checkers 
 .PHONY: style_make style_check cpp_check valgrind
 style_make:
-	$(CLANG) -i $(shell find ../ -type f -name '*.cc' -o -name '*.hpp' -o -name '*.tpp' -o -name '*.h' -o -name '*.c')
+	$(CLANG) -i $(shell find ../ -type f -name '*.cpp' -o -name '*.cc' -o -name '*.hpp' -o -name '*.tpp' -o -name '*.h' -o -name '*.c')
 	@cd $(TEST_DIR) && $(MAKE) style_make
 
 style_check: 
-	$(CLANG) -n $(shell find ../ -type f -name '*.cc' -o -name '*.hpp' -o -name '*.tpp' -o -name '*.h' -o -name '*.c')
+	$(CLANG) -n $(shell find ../ -type f -name '*.cpp' -o -name '*.cc' -o -name '*.hpp' -o -name '*.tpp' -o -name '*.h' -o -name '*.c')
 	@cd $(TEST_DIR) && $(MAKE) style_check
 
 cpp_check_tui:

@@ -94,14 +94,14 @@ all: $(LIB_NAME)
 # library
 .PHONY: $(LIB_NAME)
 $(LIB_NAME): clear_o $(OBJ_DIR) $(OBJ_FILES)
-	ar rcs $@ $(OBJ_FILES) 
+	@ar rcs $@ $(OBJ_FILES) 
 	@mv  $(LIB_NAME) $(BUILD_DIR)/$(LIB_NAME) 
 	$(SELF) clear_o         
 
 # coverage library
 .PHONY: cov
 cov: clear_o $(OBJ_DIR) $(OBJ_FILES) $(BUILD_COV_DIR)
-	ar rcs $(LIB_NAME) $(OBJ_FILES) 
+	@ar rcs $(LIB_NAME) $(OBJ_FILES) 
 	@mv  $(LIB_NAME) $(BUILD_DIR)/$(LIB_NAME) 
 
 # object files

@@ -1,3 +1,3 @@
 #pragma once
 
-#include "game_src/SnakeGame/SnakeGame.hpp"
+#include "game_src/S-snakeMain.h"
