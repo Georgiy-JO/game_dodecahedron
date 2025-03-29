@@ -40,7 +40,7 @@ int main() {
                           win_high_score, win_level);
     }
 
-    if (((clock() - time_fix) * game_info.speed) / CLOCKS_PER_SEC >= 1) {
+    if (((clock() - time_fix)*60) / CLOCKS_PER_SEC >= 1) {    //TUI renew timer here
       theBigTetrisPrinter(&game_info, win_main, win_game, win_next, win_score,
                           win_high_score, win_level);
       time_fix = clock();
@@ -128,8 +128,8 @@ void fullFieldPrinter(WINDOW* win_game, GameInfo_t game_info) {
   if (has_colors()) wattron(win_game, COLOR_PAIR(3));
 
   for (int i = 1; i < gm_Hight - 1; i++) {
-    for (int j = 1; j < gm_Width - 1; j++) {
-      if (game_info.field[i - 1][j - 1] == TAKEN) {
+    for (int j = 1; j < gm_Width/2; j++) {
+      if (game_info.field[i - 1][j - 1] >= TAKEN) {
         mvwprintw(win_game, i, j * 2, " ");
         mvwprintw(win_game, i, j * 2 - 1, " ");
       }
@@ -303,7 +303,7 @@ void untilEnter() {
 // UserAction_t)
 int getGamerInput() {
   int c = getch();
-  UserAction_t output = 0;
+  int output = 0;
   bool activness = SUCCESS;
   switch (c) {
     case KEY_UP:
@@ -344,6 +344,6 @@ int getGamerInput() {
       output = INPUT_ERROR;
       break;
   }
-  userInput(output, activness);
+  userInput((UserAction_t)output, activness);
   return output;
 }

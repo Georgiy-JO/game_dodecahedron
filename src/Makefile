@@ -125,19 +125,28 @@ DATA_FILE_SECOND = high_score_$(SECOND).txt
 FIRST = tetris
 FIRST_TEST = test_first
 FIRST_LIB = $(BUILD_DIR)/$(FIRST).a
-SECOND = snake
+FIRST_FLAG = -DTE_TRIS
+SECOND = s-snake
 SECOND_TEST = test_second
 SECOND_LIB = $(BUILD_DIR)/$(SECOND).a
+SECOND_FLAG = -DS_SNAKE
 
 # extra files
 DOXYFILE = $(ROOT_DIR)/materials/Doxyfile
 
 # target specific variables
-install_tui: MAIN_FLAGS:= $(LAN_FLAGS_C) $(POSIX_FLAG) $(DEBUG_FLAGS) 
-install_tui: LIB_FLAGS:= $(LIB_FLAG) $(NCURSES_LIB)
-install_tui: CC:= $(C)
+# install_tui: MAIN_FLAGS:= $(LAN_FLAGS_C) $(POSIX_FLAG) $(DEBUG_FLAGS) 
+# install_tui: LIB_FLAGS:=$(FIRST_LIB) $(LIB_FLAGS) $(NCURSES_LIB)
+# install_tui: CC:= $(C)
 install_tui: SAVE_DIR= $(TUI_SAVE_DIR)
 install_tui run_tui: DIR:= $(TUI_EXE_DIR)
+ 
+install_tui_first: CC:= $(C)
+install_tui_first: LIB_FLAGS:=$(FIRST_LIB) $(LIB_FLAG) $(NCURSES_LIB)
+install_tui_first:  MAIN_FLAGS:= $(LAN_FLAGS_C) $(POSIX_FLAG) $(DEBUG_FLAGS) $(FIRST_FLAG)
+install_tui_second: CC:=$(CC)
+install_tui_second: LIB_FLAGS:=$(SECOND_LIB) $(LIB_FLAGS) $(NCURSES_LIB)
+install_tui_second:  MAIN_FLAGS:= $(LAN_FLAGS_CC) $(POSIX_FLAG) $(DEBUG_FLAGS) $(SECOND_FLAG)
 
 #cpp_check_tui: CPPCHECK:= $(CPPCHECK) --checkers-report=$(CPPCHECK_FILE_tui)
 #cpp_check_gui: CPPCHECK:= $(CPPCHECK) --checkers-report=$(CPPCHECK_FILE_gui)
@@ -181,8 +190,8 @@ report:
 # the tui part
 .PHONY: intrall_tui run_tui uninstall_tui rerun_tui
 
-install_tui:$(TUI_SAVE_DIR) $(DATA_FILE_FIRST) $(DATA_FILE_SECOND) $(FIRST)#$(SECOND)
-	$(CC) $(MAIN_FLAGS) $(TUI_SRC_FILES) -o $(TUI_EXE_DIR)/$(MAIN_EXE)  $(FIRST_LIB) $(LIB_FLAGS)
+install_tui:$(TUI_SAVE_DIR) $(DATA_FILE_FIRST) $(DATA_FILE_SECOND)
+	$(CC) $(MAIN_FLAGS) $(TUI_SRC_FILES) -o $(TUI_EXE_DIR)/$(MAIN_EXE) $(LIB_FLAGS)
 	@rm -fr $(FIRST_LIB)
 	@if [ "$(DIR)" != "$(TUI_EXE_DIR)" ]; then \
 		mkdir -p $(DIR); \
@@ -191,6 +200,10 @@ install_tui:$(TUI_SAVE_DIR) $(DATA_FILE_FIRST) $(DATA_FILE_SECOND) $(FIRST)#$(SE
 		$(MAKE) clean_tui; \
 	fi
 	@echo "\n\nTUI version is installed in" && cd $(DIR) && pwd
+
+install_tui_first: $(FIRST) install_tui
+
+install_tui_second: $(SECOND) install_tui
 
 uninstall_tui: 
 	rm -fr $(TUI_EXE_DIR)
@@ -267,7 +280,8 @@ help target:
 	cpp_check  \n\
 	valgrind \n\
 	clean  \n\
-	help"	
+	help  \n\
+	install_tui_first"	
 
 
 # documentation

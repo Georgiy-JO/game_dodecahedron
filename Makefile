@@ -65,8 +65,10 @@ report:
 	@$(MAKE_REMOTE) report
 
 # tui part
-install_tui:
-	@$(MAKE_REMOTE) install_tui
+# install_tui:
+# 	@$(MAKE_REMOTE) install_tui
+install_tui_tetris:
+	@$(MAKE_REMOTE) install_tui_first
 
 uninstall_tui: 
 	@$(MAKE_REMOTE) uninstall_tui

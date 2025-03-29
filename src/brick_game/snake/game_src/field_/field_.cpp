@@ -51,13 +51,16 @@ bool field_::checkForCrach() const {
   flag=flag||snake.selfCrash();
   return flag;
 }
-void field_::moveSnake() { 
+bool field_::moveSnake() { 
+  bool have_ate=0;
   if(checkForFood()) {
-    // std::cout<<"Ate"<<std::endl;
     snake.snakeGrow();
+    have_ate=true;
   }
   else 
-    snake.snakeMove(); }
+    snake.snakeMove(); 
+  return have_ate;
+  }
 int field_::getFoodValue() const { return food->getValue(); }
 void field_::snakeTurnRight() { snake.changeDirection(snake.Right); }
 void field_::snakeTurnLeft() { snake.changeDirection(snake.Left); }

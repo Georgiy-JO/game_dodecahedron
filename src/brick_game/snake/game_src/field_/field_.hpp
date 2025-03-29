@@ -24,7 +24,7 @@ class field_ {
   void spawnFood();
   bool checkForFood() const;   // check if will happen
   bool checkForCrach() const;  // check if hammened
-  void moveSnake();
+  bool moveSnake();
   void snakeTurnRight();
   void snakeTurnLeft();
   int getFoodValue() const;

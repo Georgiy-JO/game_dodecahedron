@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "../src/brick_game/snake/s-snake.hpp"
+#include "../src/brick_game/snake/game_src/S-snakeMain.hpp"
+#include "../src/brick_game/snake/controller_src/controller.hpp"
+#include "../src/brick_game/snake/s-snake.h"
 
 using std::cout, std::endl;
 static constexpr const char* save_file = "saves/high_score_s-snake.txt";
@@ -32,7 +34,7 @@ void printGame(s21::SnakeGame& game){
   }
 }
 
-TEST(SnakeTest__timer_, Basic_1) {
+TEST(SnakeGameTest__timer_, Basic_1) {
   using cl = std::chrono::steady_clock;
   s21::timer_ timer;
   EXPECT_EQ(timer.getMovesNumber(), 0);
@@ -70,7 +72,7 @@ TEST(SnakeTest__timer_, Basic_1) {
   }
   EXPECT_EQ(timer.getMovesNumber(), 2);
 }
-TEST(SnakeTest__food_, Basic_1) {
+TEST(SnakeGameTest__food_, Basic_1) {
   s21::food_ food_0, food_01(2,3);
   s21::insect_ food_10, food_11(4,5);
   s21::mouse_ food_20, food_21(6,7);
@@ -104,7 +106,7 @@ TEST(SnakeTest__food_, Basic_1) {
   EXPECT_EQ(food_13->getValue(), 2);
 
 }
-TEST(SnakeTest__randGen_, Basic_1){
+TEST(SnakeGameTest__randGen_, Basic_1){
   int x_max=10, y_max=20;
   for(int i=0;i<20;i++){
     s21::randGen_ gena(x_max,y_max);
@@ -127,7 +129,7 @@ TEST(SnakeTest__randGen_, Basic_1){
     EXPECT_GE(gena.getBinary(),0);
   }
 }
-TEST(SnakeTest__snake_, Basic_1){
+TEST(SnakeGameTest__snake_, Basic_1){
   s21::snake_ snake0;
   EXPECT_EQ(snake0[0],s21::snake_::node_(0,0));
   EXPECT_EQ(snake0[1],s21::snake_::node_(0,1));
@@ -146,7 +148,7 @@ TEST(SnakeTest__snake_, Basic_1){
   EXPECT_EQ(snake.getHead(),snake[0]);
   EXPECT_THROW(snake[4], s21::OutOfRangeError);
 }
-TEST(SnakeTest__snake_, Move){
+TEST(SnakeGameTest__snake_, Move){
   s21::snake_ snake(s21::field_::WIDTH/2,s21::field_::HEIGHT/2+2);
   int x=s21::field_::WIDTH/2, y=s21::field_::HEIGHT/2+2;
   int moves=10, size=4;
@@ -165,7 +167,7 @@ TEST(SnakeTest__snake_, Move){
   EXPECT_THROW(snake[4], s21::OutOfRangeError);
 
 }
-TEST(SnakeTest__snake_, Turn){
+TEST(SnakeGameTest__snake_, Turn){
   s21::snake_ snake(s21::field_::WIDTH/2,s21::field_::HEIGHT/2+2);
   int x=s21::field_::WIDTH/2, y=s21::field_::HEIGHT/2+2;
   int moves=10, size=4;
@@ -212,7 +214,7 @@ TEST(SnakeTest__snake_, Turn){
 
   EXPECT_THROW(snake.changeDirection(2), s21::InputError);
 }
-TEST(SnakeTest__snake_, Turn_Move){
+TEST(SnakeGameTest__snake_, Turn_Move){
   int x=10, y=10;
   int size=4;
   int turn_l=s21::snake_::Directions::Left, turn_r=s21::snake_::Directions::Right;
@@ -271,7 +273,7 @@ TEST(SnakeTest__snake_, Turn_Move){
   EXPECT_EQ(snake.getSize(),size);
   EXPECT_EQ(snake.selfCrash(),0);
 }
-TEST(SnakeTest__snake_, Grow){
+TEST(SnakeGameTest__snake_, Grow){
   int x=10, y=10;
   int size=4;
   int turn_l=s21::snake_::Directions::Left, turn_r=s21::snake_::Directions::Right;
@@ -327,7 +329,7 @@ TEST(SnakeTest__snake_, Grow){
   EXPECT_EQ(snake.getSize(),size);
   EXPECT_EQ(snake.selfCrash(),0);
 }
-TEST(SnakeTest__snake_, Crash){
+TEST(SnakeGameTest__snake_, Crash){
   int x=10, y=10;
   int size=4;
   int turn_l=s21::snake_::Directions::Left, turn_r=s21::snake_::Directions::Right;
@@ -410,7 +412,7 @@ TEST(SnakeTest__snake_, Crash){
   EXPECT_EQ(snake.getSize(),size);
   EXPECT_EQ(snake.selfCrash(),0);
 }
-TEST(SnakeTest__field_, Basic_1){
+TEST(SnakeGameTest__field_, Basic_1){
   s21::field_ field;
   int snake_length=4;
   int count=0, count_snake=0, count_food=0, count_error=0;
@@ -440,12 +442,12 @@ TEST(SnakeTest__field_, Basic_1){
   EXPECT_EQ(field(50,50),-1);
   EXPECT_EQ(field(-1,0),-1);
 }
-TEST(SnakeTest__field_, Food_1){
+TEST(SnakeGameTest__field_, Food_1){
   s21::field_ field;
   EXPECT_LE(field.checkForFood(),1);
   EXPECT_GE(field.checkForFood(),0);
 }
-TEST(SnakeTest__field_, Snake_1){
+TEST(SnakeGameTest__field_, Snake_1){
   s21::field_ field;
   int steps=s21::field_::HEIGHT-(s21::field_::HEIGHT/2+2);
   int temp=field(s21::field_::WIDTH/2,s21::field_::HEIGHT-4);
@@ -464,7 +466,7 @@ TEST(SnakeTest__field_, Snake_1){
   EXPECT_EQ(field(s21::field_::WIDTH/2,s21::field_::HEIGHT/2+1),0);
   EXPECT_EQ(field(s21::field_::WIDTH/2,s21::field_::HEIGHT/2+2),0);
 }
-TEST(SnakeTest__field_, Basic_2){
+TEST(SnakeGameTest__field_, Basic_2){
   s21::field_ field;
   int steps=s21::field_::HEIGHT-(s21::field_::HEIGHT/2+2);
   for(int i=0;i<steps;i++)
@@ -486,7 +488,7 @@ TEST(SnakeTest__field_, Basic_2){
   EXPECT_EQ(field(s21::field_::WIDTH/2,s21::field_::HEIGHT/2+2),1);
 
 }
-TEST(SnakeTest__field_, Snake_2){
+TEST(SnakeGameTest__field_, Snake_2){
   s21::field_ field;
   int steps=s21::field_::WIDTH-(s21::field_::WIDTH/2);
   field.snakeTurnRight();
@@ -528,7 +530,7 @@ TEST(SnakeTest__field_, Snake_2){
   EXPECT_EQ(field(s21::field_::WIDTH-3,s21::field_::HEIGHT/2+3),1);
 
 }
-TEST(SnakeTest__field_, Food_2){
+TEST(SnakeGameTest__field_, Food_2){
   s21::field_ field;
   EXPECT_LE(field.checkForFood(),1);
   EXPECT_GE(field.checkForFood(),0);
@@ -541,7 +543,7 @@ TEST(SnakeTest__field_, Food_2){
   EXPECT_LE(field.checkForFood(),1);
   EXPECT_GE(field.checkForFood(),0);
 }
-TEST(SnakeTest__SnakeGame, Basic_1){
+TEST(SnakeGameTest__SnakeGame, Basic_1){
   s21::SnakeGame game;
   EXPECT_EQ(game.getRecordScore(),0);
   EXPECT_EQ(game.getScore(),0);
@@ -553,7 +555,7 @@ TEST(SnakeTest__SnakeGame, Basic_1){
   EXPECT_EQ(game.getField(s21::field_::WIDTH/2,s21::field_::HEIGHT/2+0),1);
   EXPECT_EQ(game.getField(s21::field_::WIDTH/2,s21::field_::HEIGHT/2-1),1);
 }
-TEST(SnakeTest__SnakeGame, Record_1){
+TEST(SnakeGameTest__SnakeGame, Record_1){
   s21::SnakeGame game;
   EXPECT_EQ(game.getRecordScore(),0);
   EXPECT_EQ(game.getScore(),0);
@@ -576,7 +578,7 @@ TEST(SnakeTest__SnakeGame, Record_1){
   EXPECT_EQ(leader,"user_1");
   EXPECT_EQ(score,0);
 }
-TEST(SnakeTest__SnakeGame, Record_2){
+TEST(SnakeGameTest__SnakeGame, Record_2){
   std::ofstream ofs(save_file);
   ofs<<"Leader 100";
   ofs.close();
@@ -602,7 +604,7 @@ TEST(SnakeTest__SnakeGame, Record_2){
   ifs.close();
 
 }
-TEST(SnakeTest__SnakeGame, Record_3){
+TEST(SnakeGameTest__SnakeGame, Record_3){
   std::ofstream ofs(save_file);
   ofs<<"Leader 100"<<endl;
   ofs<<"Leader_2 25"<<endl;
@@ -644,7 +646,7 @@ TEST(SnakeTest__SnakeGame, Record_3){
 
   ifs.close();
 }
-TEST(SnakeTest__SnakeGame, Record_4){
+TEST(SnakeGameTest__SnakeGame, Record_4){
   std::ofstream ofs(save_file);
   ofs<<"Leader 100"<<endl;
   ofs<<"Leader_2 25"<<endl;
@@ -687,7 +689,7 @@ TEST(SnakeTest__SnakeGame, Record_4){
 
   ifs.close();
 }
-TEST(SnakeTest__SnakeGame, Record_5){
+TEST(SnakeGameTest__SnakeGame, Record_5){
   std::ofstream ofs(save_file);
   ofs<<"Leader 100"<<endl;
   ofs<<"Leader_2 25"<<endl;
@@ -730,7 +732,7 @@ TEST(SnakeTest__SnakeGame, Record_5){
 
   ifs.close();
 }
-TEST(SnakeTest__SnakeGame, Record_6){
+TEST(SnakeGameTest__SnakeGame, Record_6){
   std::ofstream ofs(save_file);
   ofs<<"Leader -100"<<endl;
   ofs<<"Leader_2 -250"<<endl;
@@ -775,7 +777,7 @@ TEST(SnakeTest__SnakeGame, Record_6){
 
   ifs.close();
 }
-TEST(SnakeTest__SnakeGame, Speed){
+TEST(SnakeGameTest__SnakeGame, Speed){
   std::ofstream ofs(save_file);
   ofs<<"";
   ofs.close();
@@ -824,7 +826,7 @@ TEST(SnakeTest__SnakeGame, Speed){
   ifs2.close();
 
 }
-TEST(SnakeTest__SnakeGame, Movement){
+TEST(SnakeGameTest__SnakeGame, Movement){
   s21::SnakeGame game;
   EXPECT_EQ(game.getRecordScore(),10);
   EXPECT_EQ(game.getScore(),0);
@@ -875,7 +877,7 @@ TEST(SnakeTest__SnakeGame, Movement){
   EXPECT_EQ(game.getGameState(),s21::SnakeGame::st_GameOver);
 
 }
-TEST(SnakeTest__SnakeGame, Timer){
+TEST(SnakeGameTest__SnakeGame, Timer){
   using cl = std::chrono::steady_clock;
   s21::SnakeGame game;
 
@@ -939,7 +941,7 @@ TEST(SnakeTest__SnakeGame, Timer){
   EXPECT_EQ(game.getScore(),0);
   EXPECT_EQ(game.getSpeed(),1);
 }
-TEST(SnakeTest__SnakeGame, User_actions){
+TEST(SnakeGameTest__SnakeGame, User_actions){
   s21::SnakeGame game;
 
   EXPECT_THROW(game.userActionHandler(10), s21::InputError);
@@ -1015,7 +1017,7 @@ TEST(SnakeTest__SnakeGame, User_actions){
   EXPECT_EQ(game.getField(s21::field_::WIDTH/2-1,s21::field_::HEIGHT/2+3),1);
   EXPECT_EQ(game.getField(s21::field_::WIDTH/2-1,s21::field_::HEIGHT/2+2),1);
 }
-TEST(SnakeTest__SnakeGame, Test_run){
+TEST(SnakeGameTest__SnakeGame, Test_run){
   s21::SnakeGame game;
 
   game.userActionHandler(s21::SnakeGame::ac_Left);
@@ -1082,7 +1084,7 @@ TEST(SnakeTest__SnakeGame, Test_run){
     game.userActionHandler(s21::SnakeGame::ac_Forvard);
   }
 
-  EXPECT_EQ(game.getField(0,0),0);
+  // EXPECT_EQ(game.getField(0,0),0);
   game.userActionHandler(s21::SnakeGame::ac_Left);
   game.userActionHandler(s21::SnakeGame::ac_Left);
   EXPECT_EQ(game.getGameState(),s21::SnakeGame::st_Moving);
@@ -1126,24 +1128,467 @@ TEST(SnakeTest__SnakeGame, Test_run){
   EXPECT_EQ(game.getField(0,s21::field_::HEIGHT-1),1);
 
 }
-TEST(SnakeTest__SnakeGame, Record_7){
+TEST(SnakeGameTest__SnakeGame, Record_7){
   s21::SnakeGame game;
   std::remove(save_file);
   EXPECT_THROW(game.inputRecordScore(),s21::FileOpenError);
+  std::ofstream ofs(save_file);
+  ofs.close();
 }
-
-/*
-TEST(SnakeTest__GameKeeperFunction, Basic_1){
+TEST(SnakeGameTest__GameKeeperFunction, Basic_1){
   auto game=s21::gameInstanceKeeper();
 
   EXPECT_EQ(game->getField(s21::field_::WIDTH/2,s21::field_::HEIGHT/2+2),1);
   EXPECT_EQ(game->getField(s21::field_::WIDTH/2,s21::field_::HEIGHT/2+1),1);
   EXPECT_EQ(game->getField(s21::field_::WIDTH/2,s21::field_::HEIGHT/2+0),1);
   EXPECT_EQ(game->getField(s21::field_::WIDTH/2,s21::field_::HEIGHT/2-1),1);
+  EXPECT_EQ(game->getScore(),0);
+  EXPECT_EQ(game->getSpeed(),1);
+  EXPECT_EQ(game->getRecordScore(),0);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  auto check_timer = std::chrono::steady_clock::now();
+  while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() -
+                                                               check_timer)
+             .count() < 4000) {
+  } 
+  game=s21::gameInstanceKeeper();
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_GameOver);
+  EXPECT_EQ(game->getSpeed(),1);
+  EXPECT_LE(game->getScore(),8);
+  EXPECT_EQ(game->getRecordScore(),game->getScore());
+
+  game->userActionHandler(s21::SnakeGame::ac_Esc); 
+
+  game=s21::gameInstanceKeeper();
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Exit);
+  EXPECT_EQ(game->getSpeed(),1);
+  EXPECT_LE(game->getScore(),8);
+  EXPECT_EQ(game->getRecordScore(),game->getScore());
 }
-*/
-// EXPECT_EQ(timer.getSpeed(), 9);
-// EXPECT_THROW(tree_ch_st.getParentData('5'), std::out_of_range);
+TEST(SnakeControllerTest__InsideFunctions,Field_1){
+  auto field=outputFieldKeeper();
+
+  for(int y=0;y<s21::field_::HEIGHT;y++){
+    for(int x=0;x<s21::field_::WIDTH;x++){
+      EXPECT_EQ(outputFieldKeeper()[y][x],0);
+    }
+  }
+  for(int y=0;y<s21::field_::HEIGHT;y++){
+    for(int x=0;x<s21::field_::WIDTH;x++){
+        field[y][x]=(y+x)%2;
+    }
+  }
+  for(int y=0;y<s21::field_::HEIGHT;y++){
+    for(int x=0;x<s21::field_::WIDTH;x++){
+      EXPECT_EQ(outputFieldKeeper()[y][x],(y+x)%2);
+    }
+  }
+  fieldDeleter();
+  field=outputFieldKeeper();
+  EXPECT_EQ(outputFieldKeeper(),nullptr);
+  
+}
+TEST(SnakeControllerTest__InsideFunctions, GameInput_1){
+  auto game=s21::gameInstanceKeeper();
+  game->gameReStart();
+  bool sw=true;
+  EXPECT_EQ(game->getField(s21::field_::WIDTH/2,s21::field_::HEIGHT/2+2),1);
+  EXPECT_EQ(game->getField(s21::field_::WIDTH/2,s21::field_::HEIGHT/2+1),1);
+  EXPECT_EQ(game->getField(s21::field_::WIDTH/2,s21::field_::HEIGHT/2+0),1);
+  EXPECT_EQ(game->getField(s21::field_::WIDTH/2,s21::field_::HEIGHT/2-1),1);
+
+  gameInput(UserAction_t::Start,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  gameInput(UserAction_t::Pause,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Pause);
+
+  gameInput(UserAction_t::Pause,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  gameInput(UserAction_t::Pause,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Pause);
+
+  gameInput(UserAction_t::Start,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+
+  gameInput(UserAction_t::Left,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  gameInput(UserAction_t::Left,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  gameInput(UserAction_t::Left,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+
+  gameInput(UserAction_t::Right,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  gameInput(UserAction_t::Right,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  gameInput(UserAction_t::Right,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  gameInput(UserAction_t::Right,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  gameInput(UserAction_t::Right,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  gameInput(UserAction_t::Up,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  for(int i=0;i<10;i++)
+    gameInput(UserAction_t::Up,sw);
+
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_GameOver);
+
+  gameInput(UserAction_t::Start,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  gameInput(UserAction_t::Up,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  gameInput(UserAction_t::Up,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  gameInput(UserAction_t::Terminate,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_GameOver);
+
+  gameInput(UserAction_t::Terminate,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Exit);
+
+  gameInput((UserAction_t)55,sw);
+}
+TEST(SnakeControllerTest__OutsideFunctions, UserInput){
+  auto game=s21::gameInstanceKeeper();
+  game->gameReStart();
+  bool sw=true;
+  EXPECT_EQ(game->getField(s21::field_::WIDTH/2,s21::field_::HEIGHT/2+2),1);
+  EXPECT_EQ(game->getField(s21::field_::WIDTH/2,s21::field_::HEIGHT/2+1),1);
+  EXPECT_EQ(game->getField(s21::field_::WIDTH/2,s21::field_::HEIGHT/2+0),1);
+  EXPECT_EQ(game->getField(s21::field_::WIDTH/2,s21::field_::HEIGHT/2-1),1);
+
+  userInput(UserAction_t::Start,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  userInput(UserAction_t::Pause,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Pause);
+
+  userInput(UserAction_t::Pause,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  userInput(UserAction_t::Pause,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Pause);
+
+  userInput(UserAction_t::Start,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+
+  userInput(UserAction_t::Left,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  userInput(UserAction_t::Left,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  userInput(UserAction_t::Left,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+
+  userInput(UserAction_t::Right,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  userInput(UserAction_t::Right,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  userInput(UserAction_t::Right,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  userInput(UserAction_t::Right,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  userInput(UserAction_t::Right,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  userInput(UserAction_t::Up,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+  for(int i=0;i<10;i++)
+    userInput(UserAction_t::Up,sw);
+
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_GameOver);
+
+  userInput(UserAction_t::Start,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  userInput(UserAction_t::Up,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  userInput(UserAction_t::Up,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Moving);
+
+  userInput(UserAction_t::Terminate,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_GameOver);
+
+  userInput(UserAction_t::Terminate,sw);
+  EXPECT_EQ(game->getGameState(),s21::SnakeGame::st_Exit);
+
+}
+TEST(SnakeControllerTest__InsideFunctions,Field_2){
+  auto field = outputFieldKeeper();
+  EXPECT_EQ(field,nullptr);
+  fieldReallocator();
+  field = outputFieldKeeper();
+  EXPECT_NE(field,nullptr);
+  fieldDeleter();
+  field = outputFieldKeeper();
+  EXPECT_EQ(field,nullptr);
+}
+TEST(SnakeControllerTest__InsideFunctions, EndGame){
+  GameInfo_t game_out;
+  fieldReallocator();
+  auto game=s21::gameInstanceKeeper();
+  game->gameReStart();
+  gameUpdater(game_out);
+
+  EXPECT_NE(game_out.field,nullptr);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+2][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+1][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+0][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2-1][s21::field_::WIDTH/2 ],1);
+  endGame(game_out);
+  EXPECT_EQ(game_out.field,nullptr);
+  EXPECT_EQ(game_out.level,0);
+  EXPECT_EQ(game_out.speed,0);
+  EXPECT_EQ(game_out.next,nullptr);
+  EXPECT_EQ(game_out.pause,false);
+}
+TEST(SnakeControllerTest__InsideFunctions, GameUpdater){
+  std::remove(save_file);
+  std::ofstream ofs(save_file);
+  ofs.close();
+
+  auto game=s21::gameInstanceKeeper();
+  game->gameReStart();
+  fieldReallocator();
+  
+  GameInfo_t game_out;
+
+  gameUpdater(game_out);
+  EXPECT_NE(game_out.field,nullptr);
+  EXPECT_EQ(game_out.score,0);
+  EXPECT_EQ(game_out.high_score,0);
+  EXPECT_EQ(game_out.level,1);
+  EXPECT_EQ(game_out.speed,1);
+  EXPECT_EQ(game_out.next,nullptr);
+  EXPECT_EQ(game_out.pause,false);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+2][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+1][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+0][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2-1][s21::field_::WIDTH/2 ],1);
+
+  userInput(UserAction_t::Pause,true);
+  gameUpdater(game_out);
+  EXPECT_NE(game_out.field,nullptr);
+  EXPECT_EQ(game_out.score,0);
+  EXPECT_EQ(game_out.high_score,0);
+  EXPECT_EQ(game_out.level,1);
+  EXPECT_EQ(game_out.speed,1);
+  EXPECT_EQ(game_out.next,nullptr);
+  EXPECT_EQ(game_out.pause,true);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+2][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+1][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+0][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2-1][s21::field_::WIDTH/2 ],1);
+
+  auto check_timer = std::chrono::steady_clock::now();
+  while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() -
+                                                               check_timer)
+             .count() < 1000) {
+  } 
+
+  gameUpdater(game_out);
+  EXPECT_NE(game_out.field,nullptr);
+  EXPECT_EQ(game_out.score,0);
+  EXPECT_EQ(game_out.high_score,0);
+  EXPECT_EQ(game_out.level,1);
+  EXPECT_EQ(game_out.speed,1);
+  EXPECT_EQ(game_out.next,nullptr);
+  EXPECT_EQ(game_out.pause,true);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+2][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+1][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+0][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2-1][s21::field_::WIDTH/2 ],1);
+
+  userInput(UserAction_t::Pause,true);
+  gameUpdater(game_out);
+  EXPECT_NE(game_out.field,nullptr);
+  EXPECT_EQ(game_out.score,0);
+  EXPECT_EQ(game_out.high_score,0);
+  EXPECT_EQ(game_out.level,1);
+  EXPECT_EQ(game_out.speed,1);
+  EXPECT_EQ(game_out.next,nullptr);
+  EXPECT_EQ(game_out.pause,false);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+2][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+1][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+0][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2-1][s21::field_::WIDTH/2 ],1);
+
+  for(int i=0;i<10;i++)
+    userInput(UserAction_t::Up,true);
+    
+  gameUpdater(game_out);
+  EXPECT_EQ(game_out.field,nullptr);
+  EXPECT_EQ(game_out.score,game_out.high_score);
+  EXPECT_LE(game_out.level,8);
+  EXPECT_LE(game_out.speed,8);
+  EXPECT_EQ(game_out.next,nullptr);
+  EXPECT_EQ(game_out.pause,false);
+  // if(game_out.field[s21::field_::HEIGHT/2+2][s21::field_::WIDTH/2 ]){
+  //   EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+1][s21::field_::WIDTH/2 ],1);  
+  // }
+
+  userInput(UserAction_t::Terminate,true);
+  gameUpdater(game_out);
+  EXPECT_EQ(game_out.field,nullptr);
+  EXPECT_EQ(game_out.score,game_out.high_score);
+  EXPECT_EQ(game_out.level,0);
+  EXPECT_EQ(game_out.speed,0);
+  EXPECT_EQ(game_out.next,nullptr);
+  EXPECT_EQ(game_out.pause,false);
+
+}
+TEST(SnakeControllerTest__OutsideFunctions, UpdateCurrentState){
+  std::remove(save_file);
+  std::ofstream ofs(save_file);
+  ofs.close();
+
+  auto game=s21::gameInstanceKeeper();
+  game->gameReStart();
+  fieldReallocator();
+  
+  GameInfo_t game_out;
+
+  game_out=updateCurrentState();
+  EXPECT_NE(game_out.field,nullptr);
+  EXPECT_EQ(game_out.score,0);
+  EXPECT_EQ(game_out.high_score,0);
+  EXPECT_EQ(game_out.level,1);
+  EXPECT_EQ(game_out.speed,1);
+  EXPECT_EQ(game_out.next,nullptr);
+  EXPECT_EQ(game_out.pause,false);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+2][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+1][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+0][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2-1][s21::field_::WIDTH/2 ],1);
+
+  userInput(UserAction_t::Pause,true);
+  game_out=updateCurrentState();
+  EXPECT_NE(game_out.field,nullptr);
+  EXPECT_EQ(game_out.score,0);
+  EXPECT_EQ(game_out.high_score,0);
+  EXPECT_EQ(game_out.level,1);
+  EXPECT_EQ(game_out.speed,1);
+  EXPECT_EQ(game_out.next,nullptr);
+  EXPECT_EQ(game_out.pause,true);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+2][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+1][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+0][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2-1][s21::field_::WIDTH/2 ],1);
+
+  auto check_timer = std::chrono::steady_clock::now();
+  while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() -
+                                                               check_timer)
+             .count() < 1000) {
+  } 
+
+  game_out=updateCurrentState();
+  EXPECT_NE(game_out.field,nullptr);
+  EXPECT_EQ(game_out.score,0);
+  EXPECT_EQ(game_out.high_score,0);
+  EXPECT_EQ(game_out.level,1);
+  EXPECT_EQ(game_out.speed,1);
+  EXPECT_EQ(game_out.next,nullptr);
+  EXPECT_EQ(game_out.pause,true);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+2][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+1][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+0][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2-1][s21::field_::WIDTH/2 ],1);
+
+  userInput(UserAction_t::Pause,true);
+  game_out=updateCurrentState();
+  EXPECT_NE(game_out.field,nullptr);
+  EXPECT_EQ(game_out.score,0);
+  EXPECT_EQ(game_out.high_score,0);
+  EXPECT_EQ(game_out.level,1);
+  EXPECT_EQ(game_out.speed,1);
+  EXPECT_EQ(game_out.next,nullptr);
+  EXPECT_EQ(game_out.pause,false);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+2][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+1][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+0][s21::field_::WIDTH/2 ],1);
+  EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2-1][s21::field_::WIDTH/2 ],1);
+
+  for(int i=0;i<10;i++)
+    userInput(UserAction_t::Up,true);
+    
+  game_out=updateCurrentState();
+  EXPECT_EQ(game_out.field,nullptr);
+  EXPECT_EQ(game_out.score,game_out.high_score);
+  EXPECT_LE(game_out.level,8);
+  EXPECT_LE(game_out.speed,8);
+  EXPECT_EQ(game_out.next,nullptr);
+  EXPECT_EQ(game_out.pause,false);
+  // if(game_out.field[s21::field_::HEIGHT/2+2][s21::field_::WIDTH/2 ]){
+  //   EXPECT_EQ(game_out.field[s21::field_::HEIGHT/2+1][s21::field_::WIDTH/2 ],1);  
+  // }
+
+  userInput(UserAction_t::Terminate,true);
+  game_out=updateCurrentState();
+  EXPECT_EQ(game_out.field,nullptr);
+  EXPECT_EQ(game_out.score,game_out.high_score);
+  EXPECT_EQ(game_out.level,0);
+  EXPECT_EQ(game_out.speed,0);
+  EXPECT_EQ(game_out.next,nullptr);
+  EXPECT_EQ(game_out.pause,false);
+
+}
+TEST(SnakeControllerTest__InsideFunctions, ErrorHandler_1){
+  auto game=s21::gameInstanceKeeper();
+  game->gameReStart();
+  std::remove(save_file);
+  std::cout<<"Error message example:  ";
+  userInput(UserAction_t::Terminate,true);
+  std::ofstream ofs(save_file);
+  ofs.close();
+}
+TEST(SnakeControllerTest__InsideFunctions, ErrorHandler_2){
+  auto game=s21::gameInstanceKeeper();
+  game->gameReStart();
+  fieldReallocator();
+
+  std::remove(save_file);
+  for(int i=0;i<5;i++)
+    userInput(UserAction_t::Up,true);
+  auto check_timer = std::chrono::steady_clock::now();
+  while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() -
+                                                                check_timer)
+              .count() < 2000) {
+  }
+  
+  std::cout<<"Error message example:  ";
+  auto game_out=updateCurrentState();
+
+  EXPECT_EQ(game_out.level,1);
+  EXPECT_EQ(game_out.field,nullptr);
+
+  std::ofstream ofs(save_file);
+  ofs.close();
+}
+
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

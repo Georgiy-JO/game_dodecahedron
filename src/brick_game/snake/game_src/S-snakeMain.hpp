@@ -3,6 +3,6 @@
 
 
 namespace s21 {
-    const SnakeGame* gameInstanceKeeper();
+    SnakeGame* gameInstanceKeeper();
 }
 

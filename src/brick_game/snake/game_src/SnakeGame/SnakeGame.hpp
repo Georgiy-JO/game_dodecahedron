@@ -14,7 +14,7 @@ class SnakeGame {
     // st_Start,
     st_Moving,
     // st_Turn,
-    // st_Eat,
+    st_Eat,
     st_GameOver,
     // st_Message,
     st_Pause,
@@ -43,6 +43,7 @@ class SnakeGame {
 
  public:
   SnakeGame(char type=Standart_snake);
+  ~SnakeGame();
 
   void inputRecordScore();
   void saveRecordScore() const;
@@ -54,9 +55,11 @@ class SnakeGame {
   void gamePause();
   void gameContinue();
   void gameOver();
+  void gameEatingUpdate();
   void moving();
   void catchUpMovement();
   void userActionHandler(int action);
+  void manualMove();
   int getGameState() const;
   int getScore() const;
   int getRecordScore() const;

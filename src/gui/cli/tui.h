@@ -7,7 +7,17 @@
 #include <stdlib.h>
 #include <time.h>
 
+#ifdef TE_TRIS
 #include "../../brick_game/tetris/tetris.h"
+#endif
+#ifdef S_SNAKE
+#define SUCCESS 1
+#define TAKEN 1
+#define FAILURE 0
+#include "../../brick_game/snake/s-snake.h"
+
+#endif
+
 #include "database/big_inscriptions.h"
 
 #define KEY_ESC 27
@@ -21,6 +31,7 @@ enum HighScoreFieldMesure { hm_Hight = 3, hm_Width = 10, hm_y = 10, hm_x = 24 };
 enum LevelFieldMesure { lm_Hight = 3, lm_Width = 10, lm_y = 13, lm_x = 24 };
 
 #define INPUT_ERROR -1
+
 
 // main
 int getGamerInput();

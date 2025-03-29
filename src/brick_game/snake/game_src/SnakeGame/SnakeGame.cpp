@@ -3,6 +3,11 @@
 #include "SnakeGame.hpp"
 namespace s21 {
 SnakeGame::SnakeGame(char type) :  field(), game_type(type) { inputRecordScore(); }
+SnakeGame::~SnakeGame(){
+  std::ifstream file(save_file);
+  if( file.good())
+    gameOver();
+}
 void SnakeGame::inputRecordScore() {
   std::ifstream ifs;
   ifs.open(save_file);
@@ -55,10 +60,15 @@ void SnakeGame::updateScoreSpeed() {
   if (score >= record_score) record_score = score;
 }
 void SnakeGame::moving() {
-  if (field.checkForFood()) updateScoreSpeed();
-  field.moveSnake();
+  if (field.moveSnake()) game_state=st_Eat;
+  if(game_state==st_Eat) gameEatingUpdate();    //just  for the sake of FSM
   if (field.checkForCrach()) gameOver();
   if (score >= 200) gameOver();
+}
+void SnakeGame::gameEatingUpdate(){
+  updateScoreSpeed(); 
+  field.spawnFood();
+  game_state=st_Moving; 
 }
 u_int SnakeGame::getSpeed() const { return timer.getSpeed() + 1; }
 void SnakeGame::catchUpMovement() {
@@ -86,23 +96,27 @@ void SnakeGame::userActionHandler(int action) {
     case ac_Right:
       if (game_state == st_Moving) {
         field.snakeTurnRight();
-        moving();
+        manualMove();
       }
       break;
     case ac_Left:
       if (game_state == st_Moving) {
         field.snakeTurnLeft();
-        moving();
+        manualMove();
       }
       break;
     case ac_Forvard:
       if (game_state == st_Moving)
-        moving();  // manage the pressing of the button
+        manualMove();  // manage the pressing of the button
       break;
     default:
       throw InputError();  // catch me
       break;
   }
+}
+void SnakeGame::manualMove() {
+  moving();
+  timer.reset();  
 }
 void SnakeGame::gameReStart() {
   field.reset();
