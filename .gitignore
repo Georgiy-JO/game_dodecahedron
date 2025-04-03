@@ -134,4 +134,4 @@ dkms.conf
 .obsidian
 *.env
 build
-*/gen_docs
+gen_docs
