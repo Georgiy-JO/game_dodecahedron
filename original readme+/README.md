@@ -84,7 +84,7 @@ A view model is both an abstraction of a view and a wrapper of data from the mod
 
 Implement BrickGame v2.0:
 
-- The program must be developed in C++ language of C++17 standard.
+- The program must be developed in C++ language of C++20 standard.
 - The program must consist of two parts: a library that implements the logic of the snake game and a desktop interface.
 - A finite state machine must be used to formalize the logic of the game.
  The library must conform to the specification given in the first part of BrickGame (you can find it in materials/library-specification.md).
@@ -94,8 +94,8 @@ Implement BrickGame v2.0:
 - Classes must be implemented within the `s21` namespace.
 - The library that implements the game logic must be covered by unit tests. 
 - Pay special attention to checking FMS states and transitions. Use the GTest library for testing. The coverage of the library with tests must be at least 80 percent.
-- The program must be built using a Makefile with the standard set of targets for GNU programs: all, install, uninstall, clean, dvi, dist, tests. The installation directory can be arbitrary.
-- The implementation must have a GUI based on one of the GUI libraries with an API for C++17:
+- The program must be built using a Makefile with the standard set of targets for GNU programs: all, install, uninstall, clean, dvi, dist, test. The installation directory can be arbitrary.
+- The implementation must have a GUI based on one of the GUI libraries with an API for C++20:
   - Qt
   - GTK+
 - The program must be implemented using the MVC pattern. Also 
