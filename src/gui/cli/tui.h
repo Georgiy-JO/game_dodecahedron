@@ -15,7 +15,6 @@
 #define TAKEN 1
 #define FAILURE 0
 #include "../../brick_game/snake/s-snake.h"
-
 #endif
 
 #include "database/big_inscriptions.h"

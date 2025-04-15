@@ -29,6 +29,16 @@ enum PixelSt { EMPTY, TAKEN };
 typedef enum { FAILURE, SUCCESS } GreatFlag_t;
 typedef enum { st_Exit = -1, st_GameOver, st_Pause, st_GoingOn } GameState_t;
 
+typedef enum{
+  RelativeSize=0,
+  Width=10,
+  Height=20,
+  Second_RelativeSize=-1,
+  Second_Width=4,
+  Second_Height=4
+}FieldSize_c;
+
+
 typedef struct __Tetrino_t {
   TetrinoType_t type;
   // TetrinoColor_t color;

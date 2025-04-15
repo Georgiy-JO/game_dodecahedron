@@ -1,0 +1,14 @@
+Start game
+Enter
+Stop/Terminate game
+Esc/q
+Exit game
+Esc/q (double click)
+Pause/Unpause game
+p
+Turn left
+Arrow left
+Turn right
+Arrow right
+Speed up
+Arrow up 

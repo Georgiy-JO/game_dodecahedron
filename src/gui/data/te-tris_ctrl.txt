@@ -1,0 +1,16 @@
+Start game
+Enter
+Stop/Terminate game
+Esc/q
+Exit game
+Esc/q (double click)
+Pause/Unpause game
+p
+Move left
+Arrow left
+Move right
+Arrow right
+Drop piece
+Arrow down 
+Rotate piece
+z/Space

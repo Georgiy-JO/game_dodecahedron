@@ -5,6 +5,12 @@
 extern "C" {
 #endif
 
+typedef enum{
+    RelativeSize=0,
+    Width=10,
+    Height=20,
+}FieldSize_c;
+
 typedef struct {
     int **field;
     int **next;
