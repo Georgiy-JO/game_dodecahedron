@@ -11,6 +11,6 @@ Arrow left
 Move right
 Arrow right
 Drop piece
-Arrow down 
+Arrow down
 Rotate piece
 z/Space
