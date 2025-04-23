@@ -6,6 +6,7 @@
 namespace s21 {
 class randGen_ {
  private:
+  static constexpr int binary_kind_chance=5;
   std::mt19937 mt;
   std::uniform_int_distribution<u_int> x_dist;
   std::uniform_int_distribution<u_int> y_dist;

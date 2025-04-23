@@ -20,11 +20,17 @@
 #	run 			- Run the GUI version.
 #	uninstall		- Uninstall the GUI and TUI versions from the 
 #						default location only.
-#	intrall_tui 	- Install TUI version in the default location 
+#	install_tui_first
+#	install_tui_second
+#				 	- Install TUI version in the default location 
 #						(/build). Installation directory can be set by
 #						adding "DIR=pwd/location" to the command).
 #	run_tui 		- Run the TUI version (will work only if it is installed).
 #	uninstall_tui	- Uninstall TUI version.
+#	install_gui_first
+#	install_gui_second
+#	run_gui 
+#	uninstall_gui
 #	test			- Build and run all libraries tests.
 #   gcov_report		- Create a html report of the executed tests.
 #   report			- Create a html report of the executed tests and open it in the default browser.
@@ -65,16 +71,30 @@ report:
 	@$(MAKE_REMOTE) report
 
 # tui part
-# install_tui:
-# 	@$(MAKE_REMOTE) install_tui
-install_tui_tetris:
+install_tui_first:
 	@$(MAKE_REMOTE) install_tui_first
+
+install_tui_second:
+	@$(MAKE_REMOTE) install_tui_second
 
 uninstall_tui: 
 	@$(MAKE_REMOTE) uninstall_tui
 
 run_tui: 
 	@$(MAKE_REMOTE) run_tui
+
+# gui part
+install_gui_first:
+	@$(MAKE_REMOTE) install_gui_first
+
+install_gui_second:
+	@$(MAKE_REMOTE) install_gui_second
+
+uninstall_gui: 
+	@$(MAKE_REMOTE) uninstall_gui
+
+run_gui: 
+	@$(MAKE_REMOTE) run_gui
 
 # main part
 install: 
@@ -109,9 +129,14 @@ help target:
 	install \n\
 	run \n\
 	uninstall \n\
-	intrall_tui \n\
+	install_tui_first \n\
+	install_tui_second \n\
 	run_tui \n\
 	uninstall_tui \n\
+	install_gui_first \n\
+	install_gui_second \n\
+	run_gui \n\
+	uninstall_gui \n\
 	test \n\
 	gcov_report  \n\
 	report  \n\

@@ -9,6 +9,9 @@ typedef enum{
     RelativeSize=0,
     Width=10,
     Height=20,
+    Second_RelativeSize=-1,
+    Second_Width=4,
+    Second_Height=4
 }FieldSize_c;
 
 typedef struct {

@@ -178,7 +178,7 @@ void GameWindow::getViewReady(){
 
     connect(timer, &QTimer::timeout, this, &GameWindow::displayGameState);
     timer->start(50);
-/*                                                                 //temp
+/**/                                                                 //temp
     userInput(UserAction_t::Start,true);
     GameInfo_t info=updateCurrentState();
     
@@ -204,7 +204,7 @@ void GameWindow::getViewReady(){
     }
 
     displayGameState();
-    */
+    /**/
 }
 
 
@@ -259,10 +259,13 @@ void GameWindow::on_startButton_pressed()
 
 
 void GameWindow::displayGameState(){         //refactor me, Bitch!
-    /*                                                 //temp
-    static unsigned long i=0;
-    textIndication(QString("Timer tick - %1").arg(++i));      //debug
 
+    // static unsigned long i=0;
+    // textIndication(QString("Timer tick - %1").arg(++i));      //debug
+    if(main_scene.getItemColorQt(0,0)==Qt::black)
+        textIndication(QString("here"));      //debug
+
+    /**/                                                //temp
     GameInfo_t info=updateCurrentState();
     if(info.field){
         for(int y=0;y<FieldSize_c::Height;y++){
@@ -285,8 +288,10 @@ void GameWindow::displayGameState(){         //refactor me, Bitch!
     ui->scoreDisplay->display(info.score);
     ui->recordDisplay->display(info.high_score);
     ui->levelDisplay->display(info.level);
-    */
+    /**/
 }
+
+
 bool GameWindow::eventFilter(QObject *obj, QEvent *event){         //refactor me, Bitch!
     if(event->type()==QEvent::KeyPress){
         QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
@@ -298,38 +303,38 @@ bool GameWindow::eventFilter(QObject *obj, QEvent *event){         //refactor me
                 case Qt::Key_Return:
                 case Qt::Key_Enter:
                     textIndication("Pressed: - Enter");      //debug
-                    // userInput(UserAction_t::Start,flag);
+                    userInput(UserAction_t::Start,flag);
                     break;
                 case Qt::Key_Shift:
                 case Qt::Key_Z:
                 case Qt::Key_Space:
                     textIndication("Pressed: - Action");      //debug    
-                    // userInput(UserAction_t::Action,flag);
+                    userInput(UserAction_t::Action,flag);
                     break;
                 case Qt::Key_Up:
                     textIndication("Pressed: - Up");      //debug    
-                    // userInput(UserAction_t::Up,flag);
+                    userInput(UserAction_t::Up,flag);
                     break;
                 case Qt::Key_Down:
                     textIndication("Pressed: - Down");      //debug    
-                    // userInput(UserAction_t::Down,flag);
+                    userInput(UserAction_t::Down,flag);
                     break;
                 case Qt::Key_Left:
                     textIndication("Pressed: - Left");      //debug    
-                    // userInput(UserAction_t::Left,flag);
+                    userInput(UserAction_t::Left,flag);
                     break;
                 case Qt::Key_Right:
                     textIndication("Pressed: - Right");      //debug    
-                    // userInput(UserAction_t::Right,flag);
+                    userInput(UserAction_t::Right,flag);
                     break;
                 case Qt::Key_Escape:
                 case Qt::Key_Q:
                     textIndication("Pressed: - Escape");      //debug    
-                    // userInput(UserAction_t::Terminate,flag);
+                    userInput(UserAction_t::Terminate,flag);
                     break;
                 case Qt::Key_P:
                     textIndication("Pressed: - Pause");      //debug    
-                    // userInput(UserAction_t::Pause,flag);
+                    userInput(UserAction_t::Pause,flag);
                     break;
                 default:
                     break;
@@ -342,7 +347,7 @@ bool GameWindow::eventFilter(QObject *obj, QEvent *event){         //refactor me
 }
 
 
-/*
+/*              //other realization
 void GameWindow::keyPressEvent(QKeyEvent *event){
     textIndication(QString("Pressed: - %1").arg(event->key()));      //debug
     if(ui->workSpaces->currentIndex()==1 && (event->key()==Qt::Key_Enter || event->key()==Qt::Key_Return))

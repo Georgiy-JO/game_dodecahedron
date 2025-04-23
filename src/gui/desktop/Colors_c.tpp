@@ -2,7 +2,7 @@
 #pragma once
 
     
-Colors_c::Numeration Colors_c::number (QColor color=Qt::black) {
+Colors_c::Numeration Colors_c::number (QColor color) {
     Numeration output=cl_Default;
     int i=0;
     for(auto cl:color_table){
@@ -12,18 +12,19 @@ Colors_c::Numeration Colors_c::number (QColor color=Qt::black) {
     }
     return output;
 }
-QColor Colors_c::color(int index=cl_Default) {
-    QColor output=Qt::black;
-    if(index<0 || index>=color_number)
+QColor Colors_c::color(int index) {
+    QColor output=Qt::darkYellow;
+    if(index>=0 && index<color_number)
         output=color_table[index];
     return output;
 }
 
 
-inline const QColor Colors_c::color_table[color_number]={Qt::white,
+inline const QColor Colors_c::color_table[color_number]={
+    Qt::white,
     Qt::green,
-    Qt::red,
     Qt::blue,
+    Qt::red,
     Qt::darkCyan,
     Qt::darkRed,
     Qt::black,

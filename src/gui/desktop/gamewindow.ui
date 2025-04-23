@@ -195,7 +195,7 @@
          <pointsize>25</pointsize>
          <bold>true</bold>
          <strikeout>true</strikeout>
-         <hintingpreference>PreferDefaultHinting</hintingpreference>
+         <!-- <hintingpreference>PreferDefaultHinting</hintingpreference> -->
         </font>
        </property>
        <property name="textAlignment">
@@ -318,7 +318,7 @@
        <font>
         <pointsize>25</pointsize>
         <bold>true</bold>
-        <hintingpreference>PreferFullHinting</hintingpreference>
+        <!-- <hintingpreference>PreferFullHinting</hintingpreference> -->
        </font>
       </property>
       <property name="cursor">

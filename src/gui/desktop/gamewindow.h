@@ -26,24 +26,24 @@
 
 
 // #include "../../brick_game/snake/s-snake.h"           //temp
-typedef enum{          //temp
-    RelativeSize=0,
-    Width=10,
-    Height=20,
-    Second_RelativeSize=-1,
-    Second_Width=4,
-    Second_Height=4
-}FieldSize_c;
-enum UserAction_t{          //temp
-    Start,
-    Pause,
-    Terminate,
-    Left,
-    Right,
-    Up,
-    Down,
-    Action
-} ;
+// typedef enum{          //temp
+//     RelativeSize=0,
+//     Width=10,
+//     Height=20,
+//     Second_RelativeSize=-1,
+//     Second_Width=4,
+//     Second_Height=4
+// }FieldSize_c;
+// enum UserAction_t{          //temp
+//     Start,
+//     Pause,
+//     Terminate,
+//     Left,
+//     Right,
+//     Up,
+//     Down,
+//     Action
+// } ;
 
 
 

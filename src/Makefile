@@ -21,12 +21,17 @@
 #	run 			- Run the GUI version.
 #	uninstall		- Uninstall the GUI and TUI versions from the 
 #						default location only.
-#	intrall_tui 	- Install TUI version in the default location 
+#					- Install TUI version in the default location 
 #						(/build). Installation directory can be set by
 #						adding "DIR=pwd/location" to the command).
+#	install_tui_first
+#	install_tui_second
 #	run_tui 		- Run the TUI version (will work only if it is installed).
 #	uninstall_tui	- Uninstall TUI version.
-#	rerun_tui		- Rebuild and run TUI version.
+#	install_gui_first
+#	install_gui_second
+#	run_gui 
+#	uninstall_gui
 #	test			- Build and run all libraries tests.
 #	test_tetris 	- Build and run tetris library tests.
 #   gcov_report		- Create a html report of the executed tests.
@@ -88,13 +93,15 @@ BUILD_DIR = $(ROOT_DIR)/build
 
 FIRST_DIR=$(SRC_DIR)/brick_game/tetris
 SECOND_DIR=$(SRC_DIR)/brick_game/snake
-TUI_DIR = $(SRC_DIR)/gui/cli
-GUI_DIR = $(SRC_DIR)/gui/desktop
+UI_DIR = $(SRC_DIR)/gui
+TUI_DIR = $(UI_DIR)/cli
+GUI_DIR = $(UI_DIR)/desktop
 
 GUI_EXE_DIR = $(BUILD_DIR)/Game_GUI
 TUI_EXE_DIR = $(BUILD_DIR)/Game_TUI
 GUI_SAVE_DIR = $(GUI_EXE_DIR)/saves
 TUI_SAVE_DIR = $(TUI_EXE_DIR)/saves
+GUI_CMAKE_DIR = $(BUILD_DIR)/gui_build
 GENDOC_DIR = $(ROOT_DIR)/materials/gen_docs
 
 DIR ?= $(BUILD_DIR)
@@ -107,10 +114,10 @@ TUI_SRC_FILES := $(patsubst ./%, %, $(TUI_SRC_FILES))
 TUI_HEAD_FILES = $(shell find $(TUI_DIR)/ -type f -name '*.h')
 TUI_HEAD_FILES := $(patsubst ./%, %, $(TUI_HEAD_FILES))
 GUI_HEADER=$(GUI_DIR)/gui.h
-GUI_SRC_FILES = $(shell find $(GUI_DIR)/ -type  f -name '*.c')
-# GUI_SRC_FILES := $(patsubst ./%, %, $(GUI_SRC_FILES))
+GUI_SRC_FILES = $(shell find $(GUI_DIR)/ -type  f -name '*.cpp' -o -name '*.tpp')
+GUI_SRC_FILES := $(patsubst ./%, %, $(GUI_SRC_FILES))
 GUI_HEAD_FILES = $(shell find $(GUI_DIR)/ -type f -name '*.h')
-# GUI_HEAD_FILES := $(patsubst ./%, %, $(GUI_HEAD_FILES))
+GUI_HEAD_FILES := $(patsubst ./%, %, $(GUI_HEAD_FILES))
 
 # gen files
 CPPCHECK_FILE_tui = $(BUILD_DIR)/RESULT_CPPCHECK_tui.txt
@@ -120,6 +127,7 @@ CPPCHECK_FILE_gui = $(BUILD_DIR)/RESULT_CPPCHECK_gui.txt
 MAIN_EXE = game_5
 DATA_FILE_FIRST = high_score_$(FIRST).txt
 DATA_FILE_SECOND = high_score_$(SECOND).txt
+GUI_DATA_DIR = $(UI_DIR)/data
 
 #game list
 FIRST = tetris
@@ -139,14 +147,22 @@ DOXYFILE = $(ROOT_DIR)/materials/Doxyfile
 # install_tui: LIB_FLAGS:=$(FIRST_LIB) $(LIB_FLAGS) $(NCURSES_LIB)
 # install_tui: CC:= $(C)
 install_tui: SAVE_DIR= $(TUI_SAVE_DIR)
+install_gui: SAVE_DIR=$(GUI_SAVE_DIR)
 install_tui run_tui: DIR:= $(TUI_EXE_DIR)
+install_gui run_gui: DIR:=$(GUI_EXE_DIR)
  
+install_tui_first install_gui_first: LIB = $(FIRST_LIB)
+install_tui_second install_gui_second: LIB = $(SECOND_LIB)
+
 install_tui_first: CC:= $(C)
 install_tui_first: LIB_FLAGS:=$(FIRST_LIB) $(LIB_FLAG) $(NCURSES_LIB)
 install_tui_first:  MAIN_FLAGS:= $(LAN_FLAGS_C) $(POSIX_FLAG) $(DEBUG_FLAGS) $(FIRST_FLAG)
 install_tui_second: CC:=$(CC)
 install_tui_second: LIB_FLAGS:=$(SECOND_LIB) $(LIB_FLAGS) $(NCURSES_LIB)
 install_tui_second:  MAIN_FLAGS:= $(LAN_FLAGS_CC) $(POSIX_FLAG) $(DEBUG_FLAGS) $(SECOND_FLAG)
+
+install_gui_first: MAIN_FLAGS:= $(FIRST_FLAG)=1
+install_gui_second: MAIN_FLAGS:= $(SECOND_FLAG)=1
 
 #cpp_check_tui: CPPCHECK:= $(CPPCHECK) --checkers-report=$(CPPCHECK_FILE_tui)
 #cpp_check_gui: CPPCHECK:= $(CPPCHECK) --checkers-report=$(CPPCHECK_FILE_gui)
@@ -184,15 +200,12 @@ gcov_report:
 report:
 	@cd $(TEST_DIR) && $(MAKE) report
 
-# the gui part
-.PHONY: install_gui run_gui uninstall_gui
-
 # the tui part
-.PHONY: intrall_tui run_tui uninstall_tui rerun_tui
+.PHONY: intrall_tui run_tui uninstall_tui  install_tui_first install_tui_second
 
-install_tui:$(TUI_SAVE_DIR) $(DATA_FILE_FIRST) $(DATA_FILE_SECOND)
+install_tui:$(TUI_SAVE_DIR) $(DATA_FILE_FIRST) $(DATA_FILE_SECOND) 
 	$(CC) $(MAIN_FLAGS) $(TUI_SRC_FILES) -o $(TUI_EXE_DIR)/$(MAIN_EXE) $(LIB_FLAGS)
-	@rm -fr $(FIRST_LIB)
+	rm -fr $(LIB)
 	@if [ "$(DIR)" != "$(TUI_EXE_DIR)" ]; then \
 		mkdir -p $(DIR); \
 		mv $(TUI_EXE_DIR)/* $(DIR)/; \
@@ -213,15 +226,40 @@ run_tui:
 
 rebuild_tui: clean_tui tui
 
-rerun_tui: rebuild_tui run 
+# the gui part
+.PHONY: install_gui run_gui uninstall_gui install_gui_first install_gui_second
+
+install_gui: $(GUI_SAVE_DIR) $(GUI_CMAKE_DIR) $(DATA_FILE_FIRST) $(DATA_FILE_SECOND)
+	cd $(GUI_CMAKE_DIR) && cmake $(GUI_DIR)/  $(MAIN_FLAGS) && make
+	rm -fr $(LIB)
+	cp -r $(GUI_DATA_DIR) $(GUI_EXE_DIR)/data
+	mv $(GUI_CMAKE_DIR)/$(MAIN_EXE) $(GUI_EXE_DIR)/$(MAIN_EXE)
+	rm -fr $(GUI_CMAKE_DIR)
+	if [ "$(DIR)" != "$(GUI_CMAKE_DIR)" ]; then \
+		mkdir -p $(DIR); \
+		mv $(GUI_CMAKE_DIR)/* $(DIR)/; \
+		echo "rm -fr *" > $(DIR)/uninstall.sh; \
+		$(MAKE) clean_gui; \
+	fi
+	echo "\n\nGUI version is installed in" && cd $(DIR) && pwd
+
+install_gui_first: $(FIRST) install_gui
+
+install_gui_second: $(SECOND) install_gui
+
+uninstall_gui: 
+	rm -fr $(GUI_EXE_DIR)
+
+run_gui: 
+	@cd $(DIR) && ./$(MAIN_EXE)
 
 # main part
 .PHONY:  install run uninstall
-install: install_tui #install_gui
+install: install_gui_second
 
 run: install run_gui
 
-uninstall: uninstall_tui #uninstall_gui
+uninstall: uninstall_gui
 
 # checkers 
 .PHONY: style_make style_check cpp_check valgrind
@@ -239,8 +277,9 @@ cpp_check_tui:
 cpp_check_gui:
 	$(CPPCHECK) $(GUI_HEAD_FILES) $(GUI_SRC_FILES)	
 
-cpp_check: cpp_check_tui #cpp_check_gui
+cpp_check: cpp_check_tui cpp_check_gui
 	@cd $(FIRST_DIR) && $(MAKE) cpp_check
+	@cd $(SECOND_DIR) && $(MAKE) cpp_check
 	@cd $(TEST_DIR) && $(MAKE) cpp_check
 
 valgrind:
@@ -249,7 +288,7 @@ valgrind:
 # service
 .PHONY: clean help
 
-$(BUILD_DIR) $(GUI_EXE_DIR) $(TUI_EXE_DIR) $(TUI_SAVE_DIR) $(GUI_SAVE_DIR) $(GENDOC_DIR) $(DIST_DIR) :
+$(BUILD_DIR) $(GUI_EXE_DIR) $(TUI_EXE_DIR) $(TUI_SAVE_DIR) $(GUI_SAVE_DIR) $(GENDOC_DIR) $(DIST_DIR) $(GUI_CMAKE_DIR):
 	@mkdir -p $@
 
 $(DATA_FILE_FIRST) $(DATA_FILE_SECOND): $(SAVE_DIR)
@@ -257,6 +296,9 @@ $(DATA_FILE_FIRST) $(DATA_FILE_SECOND): $(SAVE_DIR)
 
 clean_tui: 
 	@rm -fr $(TUI_EXE_DIR)
+
+clean_gui:
+	@rm -fr $(GUI_EXE_DIR)
 
 clean:
 	@rm -fr $(BUILD_DIR) $(GENDOC_DIR) $(DIST_DIR) $(DIR) 
@@ -267,10 +309,14 @@ help target:
 	install \n\
 	run \n\
 	uninstall \n\
-	intrall_tui \n\
+	install_tui_first \n\
+	install_tui_second \n\
 	run_tui \n\
 	uninstall_tui \n\
-	rerun_tui \n\
+	install_gui_first \n\
+	install_gui_second \n\
+	run_gui \n\
+	uninstall_gui \n\
 	test \n\
 	test_tetris \n\
 	gcov_report  \n\
@@ -280,8 +326,7 @@ help target:
 	cpp_check  \n\
 	valgrind \n\
 	clean  \n\
-	help  \n\
-	install_tui_first"	
+	help " 
 
 
 # documentation

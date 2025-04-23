@@ -15,7 +15,7 @@ void GridScene_::allocateGrid(){
         for(int y=0;y<gr_height;y++){
             grid[y]= new QGraphicsItem*[gr_width];
             for(int x=0;x<gr_width;x++){                        
-                setDefaultItem(x, y);
+                setBackGroundItem(x, y);
             }
         }
     }
@@ -37,8 +37,8 @@ void GridScene_::setupScene(int grid_width, int grid_height, GridConstants::Pixe
     gr_width=grid_width;
     gr_height=grid_height;
     pixel_size=pixel;
-    // scene->setBackgroundBrush(QBrush(QColor(1,100,1)));
     scene->setSceneRect(0,0,gr_width*pixel_size, gr_height*pixel_size);
+    // scene->setBackgroundBrush(QBrush(QColor(GridConstants::Colors_c::color(GridConstants::Colors_c::cl_BackGround))));
     allocateGrid();
 }
 void GridScene_::cleanScene(){
@@ -71,7 +71,7 @@ QGraphicsItem* GridScene_::operator()(int x, int y){
 
 QColor GridScene_::getItemColorQt(int x, int y) const{
     gridItemCheck(x,y);
-    QColor output=Qt::black;
+    QColor output=GridConstants::Colors_c::color(GridConstants::Colors_c::cl_Default);
     if(isItemSquare(x,y))
         output= dynamic_cast<QGraphicsRectItem*>(grid[y][x])->brush().color();
     else if(isItemCircle(x,y))
@@ -80,7 +80,7 @@ QColor GridScene_::getItemColorQt(int x, int y) const{
 }
 bool GridScene_::isItemBackGround(int x, int y) const{
     bool output=0;
-    if (getItemColorQt(x,y)==GridConstants::Colors_c::color(GridConstants::Colors_c::cl_BackGround) && isItemSquare(x, y))
+    if (isItemSquare(x, y) && getItemColorQt(x,y)==GridConstants::Colors_c::color(GridConstants::Colors_c::cl_BackGround))
         output=dynamic_cast<QGraphicsRectItem*>(grid[y][x])->pen().color()==GridConstants::Colors_c::cl_GridEdge;
     return output;
 }
@@ -120,26 +120,27 @@ GridConstants::PixelSize_c pixelSizeDecoder( const int relativeSize_from_gameLib
     return output;
 } 
 
-void GridScene_::setDefaultItem(int x, int y) noexcept{                 //achtung!!!!
+void GridScene_::setBackGroundItem(int x, int y) noexcept{                 //achtung!!!!
     grid[y][x]=(QGraphicsItem*)(scene->addRect(x*pixel_size,y*pixel_size,pixel_size,pixel_size, QPen(GridConstants::Colors_c::color(GridConstants::Colors_c::cl_GridEdge)), QBrush(GridConstants::Colors_c::color(GridConstants::Colors_c::cl_BackGround))));
 }
 void GridScene_::setSquareItem(int x, int y) noexcept{                 //achtung!!!!
     grid[y][x]=(QGraphicsItem*)(scene->addRect(x*pixel_size,y*pixel_size,pixel_size,pixel_size, QPen(GridConstants::Colors_c::color(GridConstants::Colors_c::cl_GridEdge)), QBrush(GridConstants::Colors_c::color(GridConstants::Colors_c::cl_Default))));
 }
 void GridScene_::setCircleItem(int x, int y) noexcept{                 //achtung!!!!
-    grid[y][x]=(QGraphicsItem*)(scene->addRect(x*pixel_size,y*pixel_size,pixel_size,pixel_size, QPen(GridConstants::Colors_c::color(GridConstants::Colors_c::cl_BackGround)), QBrush(GridConstants::Colors_c::color(GridConstants::Colors_c::cl_Default))));
+    grid[y][x]=(QGraphicsItem*)(scene->addEllipse(x*pixel_size,y*pixel_size,pixel_size,pixel_size, QPen(GridConstants::Colors_c::color(GridConstants::Colors_c::cl_BackGround)), QBrush(GridConstants::Colors_c::color(GridConstants::Colors_c::cl_Default))));
 }
 void GridScene_::cleanItem(int x, int y){
     gridItemCheck(x,y);
     if(!isItemSquare(x,y)){
         scene->removeItem(grid[y][x]);
-        setDefaultItem(x, y);
+        setBackGroundItem(x, y);
     }
     else 
-        setItemColor(x,y,GridConstants::Colors_c::cl_BackGround);
+        setItemColor(x,y,GridConstants::Colors_c::color(GridConstants::Colors_c::cl_BackGround));
+        
 
 }
-void GridScene_::setItemColor(int x, int y, QColor color=GridConstants::Colors_c::cl_Default){
+void GridScene_::setItemColor(int x, int y, QColor color=GridConstants::Colors_c::color(GridConstants::Colors_c::cl_Default)){
     gridItemCheck(x,y);
     if(isItemSquare(x,y))
         dynamic_cast<QGraphicsRectItem*>(grid[y][x])->setBrush(color);

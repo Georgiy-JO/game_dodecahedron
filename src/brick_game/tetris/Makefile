@@ -34,7 +34,7 @@ SELF = @$(MAKE) --no-print-directory
 C = gcc
 
 # Flags
-LAN_FLAGS_C = -std=c11
+LAN_FLAGS_C = -std=c17
 
 DEBUG_FLAGS = -Wall -Wextra -Werror
 POSIX_FLAG = -D_POSIX_C_SOURCE=201706L

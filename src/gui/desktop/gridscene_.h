@@ -101,7 +101,7 @@ class GridScene_{
 
         void deleteGrid();
         void allocateGrid();
-        void setDefaultItem(int x, int y) noexcept;
+        void setBackGroundItem(int x, int y) noexcept;
         void setSquareItem(int x, int y) noexcept;
         void setCircleItem(int x, int y) noexcept;
     public:
