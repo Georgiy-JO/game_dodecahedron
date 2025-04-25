@@ -1,15 +1,16 @@
 #ifndef TETRIS_MAIN
 #define TETRIS_MAIN
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "database/tetris_TSS.h"
 #include "timer/timer.h"
-
-#ifndef bool
-#define bool _Bool
-#endif
 
 #define INPUT_ERROR -1
 
@@ -29,6 +30,8 @@ enum PixelSt { EMPTY, TAKEN };
 typedef enum { FAILURE, SUCCESS } GreatFlag_t;
 typedef enum { st_Exit = -1, st_GameOver, st_Pause, st_GoingOn } GameState_t;
 
+
+
 typedef enum{
   RelativeSize=0,
   Width=10,
@@ -37,25 +40,6 @@ typedef enum{
   Second_Width=4,
   Second_Height=4
 }FieldSize_c;
-
-
-typedef struct __Tetrino_t {
-  TetrinoType_t type;
-  // TetrinoColor_t color;
-  int x;
-  int y;
-  int** shape;
-} Tetrino_t;
-
-typedef struct __GameMain {
-  int** field;
-  Tetrino_t piece;
-  Tetrino_t next_piece;
-  long int score;
-  GameState_t state;
-  int level;
-  long int high_score;
-} GameMain_t;
 
 typedef enum {
   Start,
@@ -77,6 +61,31 @@ typedef struct __GameInfo_t {
   int speed;
   int pause;
 } GameInfo_t;
+
+void userInput(UserAction_t action, bool hold);
+GameInfo_t updateCurrentState();
+
+                      //ui communication part
+
+
+typedef struct __Tetrino_t {
+  TetrinoType_t type;
+  // TetrinoColor_t color;
+  int x;
+  int y;
+  int** shape;
+} Tetrino_t;
+
+typedef struct __GameMain {
+  int** field;
+  Tetrino_t piece;
+  Tetrino_t next_piece;
+  long int score;
+  GameState_t state;
+  int level;
+  long int high_score;
+} GameMain_t;
+
 
 // mains
 void gameStroke(GameMain_t* core);
@@ -128,8 +137,6 @@ void shapeFreeMaster(Tetrino_t* piece, int lines);
 
 // output structure functions
 void structureTranslator(GameMain_t* core, GameInfo_t* info);
-void userInput(UserAction_t action, bool hold);
-GameInfo_t updateCurrentState();
 
 // output structure service functions
 int** outputFieldKeeper(int command);
@@ -137,5 +144,9 @@ GreatFlag_t outputFieldAllocationMaster(int*** field);
 void outputFieldFreeMaster(int*** field, int hight);
 void gameOverScreen(GameInfo_t* info);
 //---------------------------------------------------------
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

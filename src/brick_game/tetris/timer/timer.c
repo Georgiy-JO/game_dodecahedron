@@ -35,17 +35,6 @@ long int timer(char restart) {
   }
   return seconds;
 
-  /*
-    long int seconds=0;
-    if(!restart)
-      time_0=clock();
-    else{
-      seconds=(long int)(clock()-time_0)/CLOCKS_PER_SEC;
-        if(seconds==MAXTIME||seconds<0)
-          startTimer();
-    }
-    return seconds;
-    */
 }
 
 // (ノ ◑‿◑)ノ (I start/restart timer)
@@ -65,8 +54,6 @@ int strokesToMake(int level) {
   double speed = levelTable(level);
   if (seconds_0 > getTimer()) seconds_0 = 0;
   if ((double)(getTimer() - seconds_0) / speed >= 1) {
-    // printf("%f-%ld-%d-%f\n",speed,
-    // getTimer(),seconds_0,(double)(getTimer()-seconds_0)/speed);
     output = (double)(getTimer() - seconds_0) / speed;
     seconds_0 = getTimer();
   }

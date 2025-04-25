@@ -259,11 +259,8 @@ void GameWindow::on_startButton_pressed()
 
 
 void GameWindow::displayGameState(){         //refactor me, Bitch!
-
     // static unsigned long i=0;
     // textIndication(QString("Timer tick - %1").arg(++i));      //debug
-    if(main_scene.getItemColorQt(0,0)==Qt::black)
-        textIndication(QString("here"));      //debug
 
     /**/                                                //temp
     GameInfo_t info=updateCurrentState();
@@ -342,7 +339,7 @@ bool GameWindow::eventFilter(QObject *obj, QEvent *event){         //refactor me
         }
         return true;  // Prevent other widgets from handling the key
     }
-    
+    displayGameState();
     return QMainWindow::eventFilter(obj, event);    // For other events, pass it on
 }
 

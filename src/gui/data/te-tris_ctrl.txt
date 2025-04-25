@@ -13,4 +13,4 @@ Arrow right
 Drop piece
 Arrow down
 Rotate piece
-z/Space
+z/Space/Arrow up

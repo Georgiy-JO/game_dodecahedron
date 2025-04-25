@@ -86,7 +86,7 @@ CPPCHECK = cppcheck --enable=all --suppress=missingIncludeSystem --force --check
 CLANG = clang-format --style=Google
 
 # directories 
-ROOT_DIR = ..
+ROOT_DIR := $(CURDIR)/..
 SRC_DIR=$(ROOT_DIR)/src
 TEST_DIR=$(ROOT_DIR)/tests
 BUILD_DIR = $(ROOT_DIR)/build
@@ -204,8 +204,8 @@ report:
 .PHONY: intrall_tui run_tui uninstall_tui  install_tui_first install_tui_second
 
 install_tui:$(TUI_SAVE_DIR) $(DATA_FILE_FIRST) $(DATA_FILE_SECOND) 
-	$(CC) $(MAIN_FLAGS) $(TUI_SRC_FILES) -o $(TUI_EXE_DIR)/$(MAIN_EXE) $(LIB_FLAGS)
-	rm -fr $(LIB)
+	@$(CC) $(MAIN_FLAGS) $(TUI_SRC_FILES) -o $(TUI_EXE_DIR)/$(MAIN_EXE) $(LIB_FLAGS)
+	@rm -fr $(LIB)
 	@if [ "$(DIR)" != "$(TUI_EXE_DIR)" ]; then \
 		mkdir -p $(DIR); \
 		mv $(TUI_EXE_DIR)/* $(DIR)/; \
@@ -214,9 +214,9 @@ install_tui:$(TUI_SAVE_DIR) $(DATA_FILE_FIRST) $(DATA_FILE_SECOND)
 	fi
 	@echo "\n\nTUI version is installed in" && cd $(DIR) && pwd
 
-install_tui_first: $(FIRST) install_tui
+install_tui_first: clean_tui $(FIRST) install_tui
 
-install_tui_second: $(SECOND) install_tui
+install_tui_second: clean_tui $(SECOND) install_tui
 
 uninstall_tui: 
 	rm -fr $(TUI_EXE_DIR)
@@ -230,22 +230,22 @@ rebuild_tui: clean_tui tui
 .PHONY: install_gui run_gui uninstall_gui install_gui_first install_gui_second
 
 install_gui: $(GUI_SAVE_DIR) $(GUI_CMAKE_DIR) $(DATA_FILE_FIRST) $(DATA_FILE_SECOND)
-	cd $(GUI_CMAKE_DIR) && cmake $(GUI_DIR)/  $(MAIN_FLAGS) && make
-	rm -fr $(LIB)
-	cp -r $(GUI_DATA_DIR) $(GUI_EXE_DIR)/data
-	mv $(GUI_CMAKE_DIR)/$(MAIN_EXE) $(GUI_EXE_DIR)/$(MAIN_EXE)
-	rm -fr $(GUI_CMAKE_DIR)
-	if [ "$(DIR)" != "$(GUI_CMAKE_DIR)" ]; then \
+	@cd $(GUI_CMAKE_DIR) && cmake $(GUI_DIR)/  $(MAIN_FLAGS) && make
+	@rm -fr $(LIB)
+	@cp -r $(GUI_DATA_DIR) $(GUI_EXE_DIR)/data
+	@mv $(GUI_CMAKE_DIR)/$(MAIN_EXE) $(GUI_EXE_DIR)/$(MAIN_EXE)
+	@rm -fr $(GUI_CMAKE_DIR)
+	@if [ "$(DIR)" != "$(GUI_EXE_DIR)" ]; then \
 		mkdir -p $(DIR); \
-		mv $(GUI_CMAKE_DIR)/* $(DIR)/; \
+		mv $(GUI_EXE_DIR)/* $(DIR)/; \
 		echo "rm -fr *" > $(DIR)/uninstall.sh; \
 		$(MAKE) clean_gui; \
 	fi
-	echo "\n\nGUI version is installed in" && cd $(DIR) && pwd
+	@echo "\n\nGUI version is installed in" && cd $(DIR) && pwd
 
-install_gui_first: $(FIRST) install_gui
+install_gui_first: clean_gui $(FIRST) install_gui
 
-install_gui_second: $(SECOND) install_gui
+install_gui_second: clean_gui $(SECOND) install_gui
 
 uninstall_gui: 
 	rm -fr $(GUI_EXE_DIR)
