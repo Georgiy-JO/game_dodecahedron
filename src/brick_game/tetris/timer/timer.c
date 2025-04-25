@@ -9,20 +9,20 @@ long int timer(char restart) {
   static GreatFlag_t pause_switch = FAILURE;
   switch (restart) {
     case 0:
-      time_0 = clock();
+      time_0 = time(NULL);
       seconds = 0;
       pause_switch = FAILURE;
       break;
     case 1:
       if (!pause_switch)
-        seconds = (long int)(clock() - time_0) / CLOCKS_PER_SEC;
+        seconds = (long int)(time(NULL) - time_0) ;
       break;
     case 2:
       if (pause_switch) {
         pause_switch = FAILURE;
-        time_0 = clock() - seconds * CLOCKS_PER_SEC;
+        time_0 = time(NULL) - seconds ;
       } else {
-        seconds = (long int)(clock() - time_0) / CLOCKS_PER_SEC;
+        seconds = (long int)(time(NULL) - time_0) ;
         pause_switch = SUCCESS;
       }
       break;
