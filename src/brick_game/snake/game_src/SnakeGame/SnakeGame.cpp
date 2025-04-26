@@ -60,10 +60,12 @@ void SnakeGame::updateScoreSpeed() {
   if (score >= record_score) record_score = score;
 }
 void SnakeGame::moving() {
-  if (field.moveSnake()) game_state=st_Eat;
-  if(game_state==st_Eat) gameEatingUpdate();    //just  for the sake of FSM
-  if (field.checkForCrach()) gameOver();
-  if (score >= 200) gameOver();
+  if(game_state==st_Moving){
+    if (field.moveSnake()) game_state=st_Eat;
+    if(game_state==st_Eat) gameEatingUpdate();    //just  for the sake of FSM
+    if (field.checkForCrach()) gameOver();
+    if (score >= 200) gameOver();
+  }
 }
 void SnakeGame::gameEatingUpdate(){
   updateScoreSpeed(); 
@@ -74,9 +76,8 @@ u_int SnakeGame::getSpeed() const { return timer.getSpeed() + 1; }
 void SnakeGame::catchUpMovement() {
   if (game_state == st_Moving) {
     u_int move_number = timer.getMovesNumber();
-    for (u_int i = 0; i < move_number; i++) {
+    for (u_int i = 0; i < move_number ; i++) 
       moving();
-    }
   }
 }
 void SnakeGame::userActionHandler(int action) {

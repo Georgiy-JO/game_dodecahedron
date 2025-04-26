@@ -14,7 +14,8 @@ u_int snake_::getSize() const { return nodes.size(); }
 snake_::node_ snake_::operator[](u_int index) const { 
   if(index>=getSize()) 
     throw OutOfRangeError();
-  return nodes[index]; }
+  return nodes[index]; 
+}
 void snake_::snakeMove() {
   snakeGrow();
   nodes.pop_back();

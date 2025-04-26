@@ -263,6 +263,7 @@ void GameWindow::displayGameState(){         //refactor me, Bitch!
     // textIndication(QString("Timer tick - %1").arg(++i));      //debug
 
     /**/                                                //temp
+    
     GameInfo_t info=updateCurrentState();
     if(info.field){
         for(int y=0;y<FieldSize_c::Height;y++){
@@ -336,10 +337,10 @@ bool GameWindow::eventFilter(QObject *obj, QEvent *event){         //refactor me
                 default:
                     break;
             }
+            displayGameState();
         }
         return true;  // Prevent other widgets from handling the key
     }
-    displayGameState();
     return QMainWindow::eventFilter(obj, event);    // For other events, pass it on
 }
 
