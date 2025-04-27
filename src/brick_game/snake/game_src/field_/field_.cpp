@@ -53,8 +53,6 @@ bool field_::checkForCrash() const {
 }
 bool field_::moveSnake() { 
   bool have_ate=0;
-  logger("START: snake position: "+std::to_string(snake.getHead().first)+':'+std::to_string(snake.getHead().second)+ 
-  "   food position: "+std::to_string(food->getPosition().first)+':'+std::to_string(food->getPosition().second));
   if(checkForFood()) {
     snake.snakeGrow();
     have_ate=true;
