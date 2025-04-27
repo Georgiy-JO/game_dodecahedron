@@ -16,7 +16,7 @@ void field_::spawnFood() {
     x = rand_gen.getX();
     y = rand_gen.getY();
     for (u_int i = 0; !flag && i < snake_size; i++) {
-      if ((int)x == (int)snake[i].first || (int)y == snake[i].second) flag = 1;
+      if ((int)x == (int)snake[i].first && (int)y == snake[i].second) flag = 1;
     }
   }
   if (binary)
@@ -42,7 +42,7 @@ bool field_::checkForFood() const {
   }
   return (next_step == (snake_::node_)food->getPosition()) ? true : false;
 }
-bool field_::checkForCrach() const {
+bool field_::checkForCrash() const {
   bool flag = (snake[0].first < 0 || snake[0].first >= WIDTH ||
                snake[0].second < 0 || snake[0].second >= HEIGHT)
                   ? 1
@@ -53,6 +53,8 @@ bool field_::checkForCrach() const {
 }
 bool field_::moveSnake() { 
   bool have_ate=0;
+  logger("START: snake position: "+std::to_string(snake.getHead().first)+':'+std::to_string(snake.getHead().second)+ 
+  "   food position: "+std::to_string(food->getPosition().first)+':'+std::to_string(food->getPosition().second));
   if(checkForFood()) {
     snake.snakeGrow();
     have_ate=true;

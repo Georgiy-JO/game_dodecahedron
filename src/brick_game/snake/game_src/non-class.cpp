@@ -11,3 +11,4 @@ SnakeGame* gameInstanceKeeper() {
   return &game;
 }
 }  // namespace s21
+

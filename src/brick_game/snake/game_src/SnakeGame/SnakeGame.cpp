@@ -60,10 +60,11 @@ void SnakeGame::updateScoreSpeed() {
   if (score >= record_score) record_score = score;
 }
 void SnakeGame::moving() {
+  logger("NEW MOVE");
   if(game_state==st_Moving){
     if (field.moveSnake()) game_state=st_Eat;
     if(game_state==st_Eat) gameEatingUpdate();    //just  for the sake of FSM
-    if (field.checkForCrach()) gameOver();
+    if (field.checkForCrash()) gameOver();
     if (score >= 200) gameOver();
   }
 }

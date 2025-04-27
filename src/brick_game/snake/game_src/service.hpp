@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "../logger/logger.hpp"
 
 namespace s21 {
 using u_int = unsigned int;
