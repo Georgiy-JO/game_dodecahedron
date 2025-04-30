@@ -31,7 +31,6 @@ enum LevelFieldMesure { lm_Hight = 3, lm_Width = 10, lm_y = 13, lm_x = 24 };
 
 #define INPUT_ERROR -1
 
-
 // main
 int getGamerInput();
 void ncursesINIT();

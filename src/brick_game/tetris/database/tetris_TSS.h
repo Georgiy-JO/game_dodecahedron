@@ -22,14 +22,14 @@ typedef enum {
 } TetrinoType_t;
 
 // TETRINOS MOVING SPEEDS
-#define SPEED_1 2
-#define SPEED_2 1
+#define SPEED_1 1
+#define SPEED_2 0.9
 #define SPEED_3 0.8
 #define SPEED_4 0.7
 #define SPEED_5 0.6
 #define SPEED_6 0.5
 #define SPEED_7 0.4
-#define SPEED_8 0.25
+#define SPEED_8 0.3
 #define SPEED_9 0.2
 #define SPEED_10 0.1
 

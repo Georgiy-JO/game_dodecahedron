@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../s-snake.h"
 #include "../game_src/S-snakeMain.hpp"
+#include "../s-snake.h"
 
 template <typename Callable>
-GameInfo_t gameInterector (Callable&& gameOperation);
+GameInfo_t gameInterector(Callable&& gameOperation);
 
-void  gameUpdater(GameInfo_t& game_output);
+void gameUpdater(GameInfo_t& game_output);
 void gameInput(UserAction_t action, bool hold);
 
 int**& outputFieldKeeper();

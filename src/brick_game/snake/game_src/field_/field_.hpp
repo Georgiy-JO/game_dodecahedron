@@ -28,7 +28,8 @@ class field_ {
   void snakeTurnRight();
   void snakeTurnLeft();
   int getFoodValue() const;
+  bool isFieldFull() const;
   void reset();
-  int operator()(int x,int y) const;
+  int operator()(int x, int y) const;
 };
 }  // namespace s21

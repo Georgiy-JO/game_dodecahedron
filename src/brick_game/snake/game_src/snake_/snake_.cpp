@@ -8,13 +8,12 @@ snake_::snake_() {
   }
 }
 snake_::snake_(int x_begining, int y_begining) {
-  reset(x_begining,y_begining);
+  reset(x_begining, y_begining);
 }
 u_int snake_::getSize() const { return nodes.size(); }
-snake_::node_ snake_::operator[](u_int index) const { 
-  if(index>=getSize()) 
-    throw OutOfRangeError();
-  return nodes[index]; 
+snake_::node_ snake_::operator[](u_int index) const {
+  if (index >= getSize()) throw OutOfRangeError();
+  return nodes[index];
 }
 void snake_::snakeMove() {
   snakeGrow();
@@ -23,16 +22,16 @@ void snake_::snakeMove() {
 void snake_::snakeGrow() {
   switch (direction) {
     case Up:
-      nodes.push_front(node_(nodes[0].first, nodes[0].second-1));
+      nodes.push_front(node_(nodes[0].first, nodes[0].second - 1));
       break;
     case Down:
-      nodes.push_front(node_(nodes[0].first, nodes[0].second+1));
+      nodes.push_front(node_(nodes[0].first, nodes[0].second + 1));
       break;
     case Right:
-      nodes.push_front(node_(nodes[0].first+1, nodes[0].second));
+      nodes.push_front(node_(nodes[0].first + 1, nodes[0].second));
       break;
     case Left:
-      nodes.push_front(node_(nodes[0].first-1, nodes[0].second));
+      nodes.push_front(node_(nodes[0].first - 1, nodes[0].second));
       break;
   }
 }
@@ -50,14 +49,14 @@ int snake_::getDirection() const { return direction; }
 void snake_::reset(int x_begining, int y_begining) {
   nodes.clear();
   for (int i = 0; i < 4; i++) {
-    nodes.push_back(node_(x_begining , y_begining- i));
+    nodes.push_back(node_(x_begining, y_begining - i));
   }
   direction = Down;
 }
-bool snake_::selfCrash() const{
-  bool flag=0;
-  u_int size=getSize();
-  for (u_int i = 1; !flag && i <size ; i++) {
+bool snake_::selfCrash() const {
+  bool flag = 0;
+  u_int size = getSize();
+  for (u_int i = 1; !flag && i < size; i++) {
     if (nodes[0].first == nodes[i].first && nodes[0].second == nodes[i].second)
       flag = 1;
   }

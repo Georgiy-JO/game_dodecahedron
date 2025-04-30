@@ -16,6 +16,7 @@ class SnakeGame {
     // st_Turn,
     st_Eat,
     st_GameOver,
+    st_GameWon,
     // st_Message,
     st_Pause,
     // st_BorderTransfort
@@ -42,7 +43,7 @@ class SnakeGame {
   GameState_t game_state = st_Moving;
 
  public:
-  SnakeGame(char type=Standart_snake);
+  SnakeGame(char type = Standart_snake);
   ~SnakeGame();
 
   void inputRecordScore();
@@ -54,7 +55,7 @@ class SnakeGame {
   void gameReStart();
   void gamePause();
   void gameContinue();
-  void gameOver();
+  void gameOver(bool status = false);
   void gameEatingUpdate();
   void moving();
   void catchUpMovement();

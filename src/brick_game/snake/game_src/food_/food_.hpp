@@ -9,8 +9,8 @@ class food_ {
   const int val;
 
  public:
-  food_(int V=0);
-  food_(u_int x, u_int y, int V=0);
+  food_(int V = 0);
+  food_(u_int x, u_int y, int V = 0);
 
   void setPosition(u_int x, u_int y);
   coords_t getPosition() const;
@@ -19,15 +19,17 @@ class food_ {
 
 class insect_ : public food_ {
  private:
- static constexpr int VALUE = 1;  
+  static constexpr int VALUE = 1;
+
  public:
   insect_();
   insect_(u_int x, u_int y);
 };
 
 class mouse_ : public food_ {
-  private:
+ private:
   static constexpr int VALUE = 2;
+
  public:
   mouse_();
   mouse_(u_int x, u_int y);

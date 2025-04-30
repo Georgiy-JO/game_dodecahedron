@@ -40,7 +40,8 @@ int main() {
                           win_high_score, win_level);
     }
 
-    if (((clock() - time_fix)*60) / CLOCKS_PER_SEC >= 1) {    //TUI renew timer here
+    if (((clock() - time_fix) * 60) / CLOCKS_PER_SEC >=
+        1) {  // TUI renew timer here
       theBigTetrisPrinter(&game_info, win_main, win_game, win_next, win_score,
                           win_high_score, win_level);
       time_fix = clock();
@@ -78,7 +79,12 @@ void mainBorder(WINDOW* win_main) {
   wclear(win_main);
   box(win_main, 0, 0);
   wattron(win_main, A_BOLD);
+#ifdef TE_TRIS
   mvwprintw(win_main, 0, wm_Width / 2 - 2, "TETRIS");
+#endif
+#ifdef S_SNAKE
+  mvwprintw(win_main, 0, wm_Width / 2 - 2, "SNAKE");
+#endif
   wattroff(win_main, A_BOLD);
   wrefresh(win_main);
 }
@@ -128,7 +134,7 @@ void fullFieldPrinter(WINDOW* win_game, GameInfo_t game_info) {
   if (has_colors()) wattron(win_game, COLOR_PAIR(3));
 
   for (int i = 1; i < gm_Hight - 1; i++) {
-    for (int j = 1; j < gm_Width/2; j++) {
+    for (int j = 1; j < gm_Width / 2; j++) {
       if (game_info.field[i - 1][j - 1] >= TAKEN) {
         mvwprintw(win_game, i, j * 2, " ");
         mvwprintw(win_game, i, j * 2 - 1, " ");
@@ -218,6 +224,7 @@ void welcomeTetrisScreen(WINDOW* win_main) {
 
   mvwprintw(win_main, 10, wm_Width / 2 - 8, "Active buttons:");
   wattron(win_main, A_ITALIC);
+#ifdef TE_TRIS
   mvwprintw(win_main, 11, wm_Width / 2 - 10, "Arrow down - DROP");
   mvwprintw(win_main, 12, wm_Width / 2 - 10, "Arrow left - MOVE LEFT");
   mvwprintw(win_main, 13, wm_Width / 2 - 10, "Arrow right - MOVE RIGH");
@@ -225,6 +232,15 @@ void welcomeTetrisScreen(WINDOW* win_main) {
   mvwprintw(win_main, 14, wm_Width / 2 - 10, "z - ACTION");
   mvwprintw(win_main, 16, wm_Width / 2 - 10, "q - TERMINATE/EXIT");
   mvwprintw(win_main, 14, wm_Width / 2 - 10, "p - PAUSE/UNPAUSE");
+#endif
+#ifdef S_SNAKE
+  mvwprintw(win_main, 11, wm_Width / 2 - 10, "Arrow up - SPEED UP");
+  mvwprintw(win_main, 12, wm_Width / 2 - 10, "Arrow left - TURN LEFT");
+  mvwprintw(win_main, 13, wm_Width / 2 - 10, "Arrow right - TURN RIGH");
+  mvwprintw(win_main, 15, wm_Width / 2 - 10, "Enter - START");
+  mvwprintw(win_main, 16, wm_Width / 2 - 10, "q - TERMINATE/EXIT");
+  mvwprintw(win_main, 14, wm_Width / 2 - 10, "p - PAUSE/UNPAUSE");
+#endif
   wattroff(win_main, A_ITALIC);
 
   if (has_colors()) wattron(win_main, COLOR_PAIR(2));
@@ -244,7 +260,7 @@ void bigSymbolInscription(WINDOW* win_main, char which, char color) {
   }
   switch (which) {
     case 1:
-      TETRIS_COORDINATES
+      GAMENAME_COORDINATES
       break;
     case 2:
       GAMEOVER_COORDINATES

@@ -5,9 +5,9 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
 #include "database/tetris_TSS.h"
 #include "timer/timer.h"
@@ -30,16 +30,14 @@ enum PixelSt { EMPTY, TAKEN };
 typedef enum { FAILURE, SUCCESS } GreatFlag_t;
 typedef enum { st_Exit = -1, st_GameOver, st_Pause, st_GoingOn } GameState_t;
 
-
-
-typedef enum{
-  RelativeSize=0,
-  Width=10,
-  Height=20,
-  Second_RelativeSize=-1,
-  Second_Width=4,
-  Second_Height=4
-}FieldSize_c;
+typedef enum {
+  RelativeSize = 0,
+  Width = 10,
+  Height = 20,
+  Second_RelativeSize = -1,
+  Second_Width = 4,
+  Second_Height = 4
+} FieldSize_c;
 
 typedef enum {
   Start,
@@ -65,8 +63,7 @@ typedef struct __GameInfo_t {
 void userInput(UserAction_t action, bool hold);
 GameInfo_t updateCurrentState();
 
-                      //ui communication part
-
+// ui communication part
 
 typedef struct __Tetrino_t {
   TetrinoType_t type;
@@ -85,7 +82,6 @@ typedef struct __GameMain {
   int level;
   long int high_score;
 } GameMain_t;
-
 
 // mains
 void gameStroke(GameMain_t* core);

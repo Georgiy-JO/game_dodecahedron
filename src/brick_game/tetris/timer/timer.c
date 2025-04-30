@@ -14,15 +14,14 @@ long int timer(char restart) {
       pause_switch = FAILURE;
       break;
     case 1:
-      if (!pause_switch)
-        seconds = (long int)(time(NULL) - time_0) ;
+      if (!pause_switch) seconds = (long int)(time(NULL) - time_0);
       break;
     case 2:
       if (pause_switch) {
         pause_switch = FAILURE;
-        time_0 = time(NULL) - seconds ;
+        time_0 = time(NULL) - seconds;
       } else {
-        seconds = (long int)(time(NULL) - time_0) ;
+        seconds = (long int)(time(NULL) - time_0);
         pause_switch = SUCCESS;
       }
       break;
@@ -34,7 +33,6 @@ long int timer(char restart) {
     if (restart == 2) pause_switch = SUCCESS;
   }
   return seconds;
-
 }
 
 // (ノ ◑‿◑)ノ (I start/restart timer)

@@ -5,34 +5,34 @@
 extern "C" {
 #endif
 
-typedef enum{
-    RelativeSize=0,
-    Width=10,
-    Height=20,
-    Second_RelativeSize=0,
-    Second_Width=0,
-    Second_Height=0
-}FieldSize_c;
+typedef enum {
+  RelativeSize = 0,
+  Width = 10,
+  Height = 20,
+  Second_RelativeSize = 0,
+  Second_Width = 0,
+  Second_Height = 0
+} FieldSize_c;
 
 typedef struct {
-    int **field;
-    int **next;
-    int score;
-    int high_score;
-    int level;
-    int speed;
-    int pause;
+  int **field;
+  int **next;
+  int score;
+  int high_score;
+  int level;
+  int speed;
+  int pause;
 } GameInfo_t;
 
 typedef enum {
-    Start,
-    Pause,
-    Terminate,
-    Left,
-    Right,
-    Up,
-    Down,
-    Action
+  Start,
+  Pause,
+  Terminate,
+  Left,
+  Right,
+  Up,
+  Down,
+  Action
 } UserAction_t;
 
 GameInfo_t updateCurrentState();
@@ -42,4 +42,4 @@ void userInput(UserAction_t action, bool hold);
 }
 #endif
 
-#endif //S_SNAKE_H
+#endif  // S_SNAKE_H

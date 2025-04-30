@@ -56,8 +56,7 @@ CLANG = clang-format --style=Google
 CPPCHECK = cppcheck --enable=all --suppress=missingIncludeSystem  --force --check-level=exhaustive
 VALG_FILE_FIRST_FLAG = --log-file=VALGRIND_tetris.txt
 VALG_FILE_SECOND_FLAG = --log-file=VALGRIND_snake.txt
-# CPPCHECK_FILE_FIRST_FLAG = --checkers-report=$(BUILD_DIR)/CPPCHECK_test_first.txt
-# CPPCHECK_FILE_SECOND_FLAG = --checkers-report=$(BUILD_DIR)/CPPCHECK_test_second.txt
+
 
 # directories 
 ROOT_DIR = ..
@@ -70,14 +69,11 @@ BUILD_COV_DIR = $(BUILD_DIR)/coverage
 
 SAVE_TEST_DIR = $(BUILD_TEST_DIR)/saves
 SAVE_COV_DIR = $(BUILD_COV_DIR)/saves
-DATA_FILE_FIRST = high_score_$(FIRST).txt
-DATA_FILE_SECOND = high_score_$(SECOND).txt
 
 FIRST_DIR=$(SRC_DIR)/brick_game/tetris
 SECOND_DIR=$(SRC_DIR)/brick_game/snake
 
 # game files
-MAIN_EXE = game_5
 DATA_FILE_FIRST = high_score_$(FIRST).txt
 DATA_FILE_SECOND = high_score_$(SECOND).txt
 
@@ -92,9 +88,6 @@ SECOND_TEST = s-snake_test
 SECOND_COV = s-snake_cov
 SECOND_LIB = $(BUILD_DIR)/$(SECOND).a
 SECOND_TEST_SRC_FILES = $(SECOND_TEST)s.cpp
-
-# extra files
-DOXYFILE = $(ROOT_DIR)/materials/Doxyfile
 
 # target specific variables
 $(FIRST_TEST): MAIN_FLAGS:= $(C_FLAG) $(POSIX_FLAG) $(DEBUG_FLAGS) 
@@ -173,14 +166,14 @@ second_cov_exe: second_cov
 
 first_cov_main: first_cov_exe
 	@lcov --capture --directory $(OBJ_DIR) --output-file $(BUILD_COV_DIR)/coverage.info
-	genhtml --output-directory=$(BUILD_COV_DIR) $(BUILD_COV_DIR)/coverage.info
+	@genhtml --output-directory=$(BUILD_COV_DIR) $(BUILD_COV_DIR)/coverage.info
 	@$(MAKE) clean_o
 
 second_cov_main: second_cov_exe
 	@lcov --capture --directory $(OBJ_DIR) --output-file $(BUILD_DIR)/coverage_2.info
 	@lcov --remove $(BUILD_DIR)/coverage_2.info '/usr/*' --output-file $(BUILD_COV_DIR)/coverage.info
 	@rm -fr $(BUILD_DIR)/coverage_2.info $(SAVE_COV_DIR)
-	genhtml --output-directory=$(BUILD_COV_DIR) $(BUILD_COV_DIR)/coverage.info
+	@genhtml --output-directory=$(BUILD_COV_DIR) $(BUILD_COV_DIR)/coverage.info
 	@$(MAKE) clean_o
 
 cov_main: first_cov_exe
@@ -237,7 +230,6 @@ $(BUILD_DIR) $(BUILD_COV_DIR) $(BUILD_TEST_DIR) $(OBJ_DIR) $(SAVE_TEST_DIR) $(SA
 $(DATA_FILE_FIRST) $(DATA_FILE_SECOND): $(SAVE_DIR)
 	@touch $(SAVE_DIR)/$@
 
-
 clean_cov:
 	@rm -fr $(BUILD_COV_DIR)
 
@@ -245,7 +237,7 @@ clean_o:
 	@rm -fr $(OBJ_DIR)
 
 clean:
-	@rm -fr $(BUILD_DIR) $(BUILD_COV_DIR)
+	@rm -fr $(BUILD_DIR)
 	
 help target:
 	@echo "Main targets are: \n\

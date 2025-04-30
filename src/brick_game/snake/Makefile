@@ -18,16 +18,12 @@
 #   style_check    	- Runs a style check of the library code.
 # 	style_make		- Change code so it passes style checks (Google st.).
 # 	cpp_check		- Check the library code with CppCheck tool.
-#!   dvi    			- Creates documentation for the library.
-#	clean_div		- Removes documentation artifacts.
-#	rebuild_lib		- Rebuild the library.
 #	help 			- List of targets.
 #
 # Usage:
 #   make target
 # ----------------------------------------------------------------------
 
-OS=$(shell uname)
 SELF = @$(MAKE) --no-print-directory 
 
 # Compillers
@@ -42,29 +38,18 @@ POSIX_FLAG = -D_POSIX_C_SOURCE=201706L
 INFO_FLAGS = -g -O0
 COV_FLAGS =-fprofile-arcs -ftest-coverage
 
-CHLIB = -lcheck
-MATHLIB = -lm
-
-LIB_FLAGS= 
-ifeq ($(OS), Linux)
-	LIB_FLAGS += -lsubunit
-endif
 
 # Checkers
 # Valgrind check can be found in test file
-CPPCHECK = cppcheck --enable=all --suppress=missingIncludeSystem  --force --check-level=exhaustive #--checkers-report=$(CPPCHECK_FILE) 
+CPPCHECK = cppcheck --enable=all --suppress=missingIncludeSystem  --force --check-level=exhaustive 
 CLANG = clang-format --style=Google
 
 # directories 
 SRC_DIR = game_src
 ROOT_DIR = ../../..
 BUILD_DIR = $(ROOT_DIR)/build
-TEST_DIR=$(ROOT_DIR)/tests
 OBJ_DIR = $(BUILD_DIR)/service_files
 BUILD_COV_DIR = $(BUILD_DIR)/coverage
-
-CPPCHECK_FILE = $(BUILD_DIR)/RESULT_CPPCHECK_te-tris.txt
-GEN_DOC_DIR = $(ROOT_DIR)/materials/gen_docs
 
 # src files
 MAIN_HEADER=s-snake.hpp
@@ -76,9 +61,6 @@ HEAD_FILES := $(patsubst ./%, %, $(HEAD_FILES))
 # gen files
 OBJ_FILES = $(addprefix $(OBJ_DIR)/,  $(SRC_FILES:.cpp=.o))
 LIB_NAME=$(MAIN_HEADER:.hpp=.a)
-
-# extra files
-DOXYFILE = $(ROOT_DIR)/materials/Doxyfile
 
 # target specific variables
 $(LIB_NAME): MAIN_FLAGS:= $(CPP_FLAG) $(DEBUG_FLAGS) $(POSIX_FLAG)
@@ -119,41 +101,29 @@ style_check:
 cpp_check:
 	$(CPPCHECK) $(HEAD_FILES) $(SRC_FILES)
 
-# documentation
-.PHONY: dvi 
-dvi:
-	@doxygen $(DOXYFILE) 
-	@echo "project documentation can be found in $(GEN_DOC_DIR)"
 
 # service
-.PHONY: clean clean_div rebuild_lib help
+.PHONY: clean help
 
-$(OBJ_DIR) $(BUILD_DIR) $(BUILD_COV_DIR) $(GEN_DOC_DIR):
+$(OBJ_DIR) $(BUILD_DIR) $(BUILD_COV_DIR):
 	@mkdir -p $@
 
 clean_o: 
 	@rm -fr $(OBJ_DIR)
 
-clean_div:
-	@rm -fr $(GEN_DOC_DIR)
-
-clean: clean_o clean_div
+clean: clean_o 
 	@rm -fr $(BUILD_DIR)
 
 clear: clean
-
-rebuild_lib: clean all
 
 help target:
 	@echo "Main targets are: \n\
 	all  \n\
 	$(LIB_NAME) \n\
+	cov \n\
 	style_make  \n\
 	style_check  \n\
 	cpp_check  \n\
-	dvi  \n\
 	clean  \n\
-	clean_div  \n\
-	rebuild_lib \n\
 	help"
 	

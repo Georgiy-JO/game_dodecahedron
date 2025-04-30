@@ -10,7 +10,7 @@ void timer_::updateSpeed() {
   if (speed < 9) speed++;
 }
 int timer_::getSpeed() const { return speed; }
-u_int timer_::getMovesNumber(){
+u_int timer_::getMovesNumber() {
   auto time_now = clock::now();
   auto time_delta = std::chrono::duration_cast<std::chrono::milliseconds>(
                         time_now - last_update)

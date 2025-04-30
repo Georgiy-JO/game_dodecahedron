@@ -4,14 +4,23 @@
 
 |Action|Key-board button|
 |---|---|
-|*Drop*|**Arrow down** key|
-|*Move left*|**Arrow left** key|
-|*Move right*|**Arrow right** key|
-|*Start the game*|**Enter** key|
-|*Action* key|**z** key <br>**/**  key<br>**Arrow up**|
-|*Terminate*/*Exit* <br><br>*Terminate* and *Exit* |**q** key<br> **Esc** key <br> (double push)|
-|*Pause*/*Unpause*|**p** key|
-
+|Start game|Enter|
+|Stop/Terminate game|Esc/q|
+|Exit game|Esc/q (double click)|
+|Pause/Unpause game|p|
+|Move left|Arrow left|
+|Move right|Arrow right|
+|Drop piece|Arrow down|
+|Rotate piece|z/Space/Arrow up|
 
 ## The S-Snake game
 
+|Action|Key-board button|
+|---|---|
+|Start game|Enter|
+|Stop/Terminate game|Esc/q|
+|Exit game|Esc/q (double click)|
+|Pause/Unpause game|p|
+|Turn left|Arrow left|
+|Turn right|Arrow right|
+|Speed up|Arrow up/z/Space|

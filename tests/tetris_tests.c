@@ -1034,10 +1034,12 @@ START_TEST(test_timer) {
     }
   }
 }
+/*
+//left from old timer structure (now in seconds and not precessor ticks)
 START_TEST(test_strokesToMake) {
   int time_O;
   int level = 1;
-  int check = 2;
+  int check = 4;
   startTimer();
   time_O = clock();
   int i = 0;
@@ -1063,7 +1065,7 @@ START_TEST(test_strokesToMake) {
           check = 10;
           break;
         case 8:
-          check = 16;
+          check = 13;
           break;
         case 9:
           check = 20;
@@ -1088,6 +1090,8 @@ START_TEST(test_strokesToMake) {
       break;
   }
 }
+*/
+
 START_TEST(test_catchUpStructure) {
   GameMain_t *core = structureKeeper();
   userInput(Start, 1);
@@ -1100,6 +1104,7 @@ START_TEST(test_catchUpStructure) {
       break;
     }
   }
+  // left from old timer structure (now in seconds and not precessor ticks)
   ck_assert_int_eq(core->piece.y, move_for / levelTable(1));
   userInput(Terminate, 1);
 
@@ -1210,6 +1215,16 @@ START_TEST(test_highScoreKeeper) {
   userInput(Terminate, 1);
   userInput(Terminate, 1);
 }
+START_TEST(test_levelTable) {
+  int level = 1;
+  double check = 1, delta = 0.1, tolerance = delta / 10;
+  while (level <= 10) {
+    ck_assert_double_eq_tol(levelTable(level), check, tolerance);
+    check -= delta;
+    level++;
+  }
+}
+
 // elevator test blocks
 void test_block_1(SRunner *sr) {
   Suite *s = suite_create("Test block #1");
@@ -1253,7 +1268,7 @@ void test_block_2(SRunner *sr) {
   suite_add_tcase(s, tc_core);
 
   tcase_add_test(tc_core, test_timer);
-  tcase_add_test(tc_core, test_strokesToMake);
+  // tcase_add_test(tc_core, test_strokesToMake);
   tcase_add_test(tc_core, test_catchUpStructure);
   tcase_add_test(tc_core, test_updateCurrentState);
 
@@ -1267,6 +1282,7 @@ void test_block_3(SRunner *sr) {
   tcase_add_test(tc_core, test_whenScoreChanges);
   tcase_add_test(tc_core, test_highScoreKeeper);
   tcase_add_test(tc_core, test_freaky_tests);
+  tcase_add_test(tc_core, test_levelTable);
 
   srunner_add_suite(sr, s);
 }

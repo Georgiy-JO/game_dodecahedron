@@ -9,40 +9,61 @@
 #	Makefiles of libraries (parts of the project) and tests Makefile.
 #
 # Notes:
-#	Icluded games: tetris, snake.
+#	Currrent version icludeds games: tetris (first game), snake (second game).
 #	
-#
 # Key Targets:
-#   all 			- Install GUI and TUI versions into the default 
-#					  	location (/build) and run the GUI version.
-#	install			- Install GUI and TUI versions in the default 
-#						location (/build). Installation directory can 
-#						be set by adding "DIR=pwd/location" to the command).
-#	run 			- Run the GUI version.
-#	uninstall		- Uninstall the GUI and TUI versions from the 
-#						default location only.
-#					- Install TUI version in the default location 
-#						(/build). Installation directory can be set by
-#						adding "DIR=pwd/location" to the command).
-#	install_tui_first
-#	install_tui_second
-#	run_tui 		- Run the TUI version (will work only if it is installed).
-#	uninstall_tui	- Uninstall TUI version.
-#	install_gui_first
-#	install_gui_second
-#	run_gui 
-#	uninstall_gui
-#	test			- Build and run all libraries tests.
-#	test_tetris 	- Build and run tetris library tests.
-#   gcov_report		- Create a html report of the executed tests.
-#   report			- Create a html report of the executed tests and open 
+#   all 				- Install GUI versions of the second game into 
+#						the default location (/build) and run it.
+#	install				- Install GUI versions of the second game into 
+#						the default location (/build). 
+#						Installation directory can be set by adding 
+#						"DIR= pwd/game_folder" to the command.
+#	run 				- Run the GUI version of the game (works only 
+#						if it is installed).
+#	uninstall			- Uninstall the GUI/TUI version from the default 
+#						location only.
+#	install_tui_first	- Install TUI version of the first game 
+#						into the default location (/build). 
+#						Installation directory can be set by adding
+#						"DIR= pwd/game_folder" to the command.
+#	install_tui_second	- Install TUI version of the second game 
+#						into the default location (/build). 
+#						Installation directory can be set by adding
+#						"DIR= pwd/game_folder" to the command.
+#	run_tui 			- Run the TUI version (works only if it is installed).
+#	uninstall_tui		- Uninstall the TUI version from the default 
+#						location only.
+#	install_gui_first	- Install GUI version of the first game 
+#						into the default location (/build). 
+#						Installation directory can be set by adding
+#						"DIR= pwd/game_folder" to the command.
+#	install_gui_second	- Install GUI version of the second game 
+#						into the default location (/build). 
+#						Installation directory can be set by adding
+#						"DIR= pwd/game_folder" to the command.
+#	run_gui 			- Run the GUI version (workso nly if it is installed). 
+#	uninstall_gui		- Uninstall the GUI version from the default 
+#						location only.
+#	test				- Build and run all libraries tests.
+#	test_first 			- Build and run first game library tests.
+#	test_second 		- Build and run second game library tests.
+#   gcov_report			- Create a html report of the executed tests.
+#   report				- Create a html report of the executed tests  
+#						and open it in the default browser.
+#   clean    			- Removes all build artifacts and created files.
+#   valgrind			- run all tests with valgrind and write 
+#						the results to a file.
+#   style_check    		- Runs a style check of all code files.
+# 	style_make			- Change all code files so they passe style 
+#						checks (Google st.).
+# 	cpp_check			- Check all code files with CppCheck tool.
+#	dvi					- Create a html code documentation.
+#	docs				- Create a html code documentation and open 
 #						it in the default browser.
-#   clean    		- Removes all build artifacts and created files.
-#   valgrind		- run all tests with valgrind and write the results to a file.
-#   style_check    	- Runs a style check of all code files.
-# 	style_make		- Change all code files so they passe style checks (Google st.).
-# 	cpp_check		- Check all code files with CppCheck tool.
-#	help 			- List of targets.
+#	dist				- Create an archive for distribution.
+#						Distribution directory can be set by adding
+#						"DIR=pwd/location" to the command.
+#	help 				- List of targets.
 #
 # Usage:
 #   make target
@@ -52,7 +73,7 @@
 
 # main info
 PROJECT_NAME=game_dodecahedron
-VERSION =0.1
+VERSION =1.0
 
 OS=$(shell uname)
 MAKE = make --no-print-directory
@@ -67,12 +88,6 @@ LAN_FLAGS_CC = -std=c++17
 
 DEBUG_FLAGS = -Wall -Wextra -Werror
 POSIX_FLAG = -D_POSIX_C_SOURCE=201706L
-
-COV_FLAGS =-fprofile-arcs -ftest-coverage
-
-CHECK_LIB = -lcheck
-MATH_LIB = -lm
-GTEST_LIB = -L/usr/lib/ -lgtest -lgtest_main -pthread #-Wl,--no-warn-search-mismatch
 
 NCURSES_LIB = -lncurses
 
@@ -102,26 +117,19 @@ TUI_EXE_DIR = $(BUILD_DIR)/Game_TUI
 GUI_SAVE_DIR = $(GUI_EXE_DIR)/saves
 TUI_SAVE_DIR = $(TUI_EXE_DIR)/saves
 GUI_CMAKE_DIR = $(BUILD_DIR)/gui_build
-GENDOC_DIR = $(ROOT_DIR)/materials/gen_docs
+GENDOC_DIR = $(BUILD_DIR)/gen_doc
 
 DIR ?= $(BUILD_DIR)
-DIST_DIR = $(DIR)/distribution
 
 # src files
-TUI_HEADER=$(TUI_DIR)/tui.h
 TUI_SRC_FILES = $(shell find $(TUI_DIR)/ -type  f -name '*.c')
 TUI_SRC_FILES := $(patsubst ./%, %, $(TUI_SRC_FILES))
 TUI_HEAD_FILES = $(shell find $(TUI_DIR)/ -type f -name '*.h')
 TUI_HEAD_FILES := $(patsubst ./%, %, $(TUI_HEAD_FILES))
-GUI_HEADER=$(GUI_DIR)/gui.h
 GUI_SRC_FILES = $(shell find $(GUI_DIR)/ -type  f -name '*.cpp' -o -name '*.tpp')
 GUI_SRC_FILES := $(patsubst ./%, %, $(GUI_SRC_FILES))
 GUI_HEAD_FILES = $(shell find $(GUI_DIR)/ -type f -name '*.h')
 GUI_HEAD_FILES := $(patsubst ./%, %, $(GUI_HEAD_FILES))
-
-# gen files
-CPPCHECK_FILE_tui = $(BUILD_DIR)/RESULT_CPPCHECK_tui.txt
-CPPCHECK_FILE_gui = $(BUILD_DIR)/RESULT_CPPCHECK_gui.txt
 
 # game files
 MAIN_EXE = game_5
@@ -141,15 +149,14 @@ SECOND_FLAG = -DS_SNAKE
 
 # extra files
 DOXYFILE = $(ROOT_DIR)/materials/Doxyfile
+DIST_LIST=$(SRC_DIR) $(TEST_DIR) $(DOXYFILE) $(ROOT_DIR)/materials $(ROOT_DIR)/misc $(ROOT_DIR)/Makefile
 
 # target specific variables
-# install_tui: MAIN_FLAGS:= $(LAN_FLAGS_C) $(POSIX_FLAG) $(DEBUG_FLAGS) 
-# install_tui: LIB_FLAGS:=$(FIRST_LIB) $(LIB_FLAGS) $(NCURSES_LIB)
-# install_tui: CC:= $(C)
 install_tui: SAVE_DIR= $(TUI_SAVE_DIR)
 install_gui: SAVE_DIR=$(GUI_SAVE_DIR)
 install_tui run_tui: DIR:= $(TUI_EXE_DIR)
 install_gui run_gui: DIR:=$(GUI_EXE_DIR)
+dist: DIR:=$(BUILD_DIR)
  
 install_tui_first install_gui_first: LIB = $(FIRST_LIB)
 install_tui_second install_gui_second: LIB = $(SECOND_LIB)
@@ -163,9 +170,6 @@ install_tui_second:  MAIN_FLAGS:= $(LAN_FLAGS_CC) $(POSIX_FLAG) $(DEBUG_FLAGS) $
 
 install_gui_first: MAIN_FLAGS:= $(FIRST_FLAG)=1
 install_gui_second: MAIN_FLAGS:= $(SECOND_FLAG)=1
-
-#cpp_check_tui: CPPCHECK:= $(CPPCHECK) --checkers-report=$(CPPCHECK_FILE_tui)
-#cpp_check_gui: CPPCHECK:= $(CPPCHECK) --checkers-report=$(CPPCHECK_FILE_gui)
 
 # ----------------------------------------------------------------------
 # targets
@@ -224,8 +228,6 @@ uninstall_tui:
 run_tui: 
 	@cd $(DIR) && ./$(MAIN_EXE)
 
-rebuild_tui: clean_tui tui
-
 # the gui part
 .PHONY: install_gui run_gui uninstall_gui install_gui_first install_gui_second
 
@@ -255,9 +257,10 @@ run_gui:
 
 # main part
 .PHONY:  install run uninstall
+
 install: install_gui_second
 
-run: install run_gui
+run: run_gui
 
 uninstall: uninstall_gui
 
@@ -285,10 +288,29 @@ cpp_check: cpp_check_tui cpp_check_gui
 valgrind:
 	@cd $(TEST_DIR) && $(MAKE) valgrind_test
 
+# documentation
+.PHONY: dvi docs
+dvi: $(GENDOC_DIR)
+	@doxygen $(DOXYFILE)
+	@echo "project documentation can be found in $(GENDOC_DIR)"
+
+docs: dvi
+	@if [ "$(OS)" = "Linux" ]; then \
+		xdg-open $(GENDOC_DIR)/index.html; \
+	elif [ "$(OS)" = "Darwin" ]; then \
+		open $(GENDOC_DIR)/index.html; \
+	fi
+
+# distribution
+.PHONY: dist
+
+dist: $(DIR) $(DIST_LIST)
+	tar -czf $(DIR)/$(PROJECT_NAME)-$(VERSION).tar.gz $(DIST_LIST) 
+
 # service
 .PHONY: clean help
 
-$(BUILD_DIR) $(GUI_EXE_DIR) $(TUI_EXE_DIR) $(TUI_SAVE_DIR) $(GUI_SAVE_DIR) $(GENDOC_DIR) $(DIST_DIR) $(GUI_CMAKE_DIR):
+$(BUILD_DIR) $(GUI_EXE_DIR) $(TUI_EXE_DIR) $(TUI_SAVE_DIR) $(GUI_SAVE_DIR) $(GENDOC_DIR) $(GUI_CMAKE_DIR):
 	@mkdir -p $@
 
 $(DATA_FILE_FIRST) $(DATA_FILE_SECOND): $(SAVE_DIR)
@@ -300,8 +322,11 @@ clean_tui:
 clean_gui:
 	@rm -fr $(GUI_EXE_DIR)
 
+clean_dvi:
+	@rm -fr $(GENDOC_DIR)
+
 clean:
-	@rm -fr $(BUILD_DIR) $(GENDOC_DIR) $(DIST_DIR) $(DIR) 
+	@rm -fr $(BUILD_DIR)
 
 help target:
 	@echo "Main targets are: \n\
@@ -318,26 +343,24 @@ help target:
 	run_gui \n\
 	uninstall_gui \n\
 	test \n\
-	test_tetris \n\
+	test_first \n\
+	test_second \n\
 	gcov_report  \n\
 	report  \n\
 	style_make  \n\
 	style_check  \n\
 	cpp_check  \n\
 	valgrind \n\
-	clean  \n\
-	help " 
+	clean \n\
+	dvi \n\
+	docs \n\
+	dist \n\
+	help \n\
+	* Installation and distribution directories can  \n\
+	be set by adding >DIR= pwd/game_folder< to any  \n\
+	uninstallation command"
 
 
-# documentation
 
-# distribution
 
-# .PHONY: dist
-
-# dist: $(DIST_DIR) $(TETRIS_DIR) $(GUI_DIR) $(DOC_DIR)
-# 	tar -czf $(DIST_DIR)/$(PROJECT_NAME)-$(VERSION).tar.gz $(TETRIS_DIR) $(GUI_DIR) $(DOC_DIR) Makefile
-
-# dist_all: $(DIST_DIR) $(TEST_DIR) $(TETRIS_DIR) $(GUI_DIR)
-# 	tar -czf $(DIST_DIR)/$(PROJECT_NAME)-$(VERSION)-f.tar.gz $(TEST_DIR) $(TETRIS_DIR) $(GUI_DIR) $(DOC_DIR) Makefile
 
