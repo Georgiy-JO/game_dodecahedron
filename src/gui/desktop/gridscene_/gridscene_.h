@@ -76,20 +76,19 @@ class GridScene_ {
   void setItemColor(int x, int y, QColor color);
   void setItemSquare(int x, int y);
   void setItemCircle(int x, int y);
-  /*
-  Note for 2 following functions:
-  Item code system:
-  How it will work:
-  item_code is a number from 0 to 39 passed from the game library to UI.
-  item_code is used to determine the type of item and it's color.
-  It is set separately for every element of the fame field matrix.
-  Dozens determin the type of the item, units - colors.
-  How it works now:
-  item_code is a number from 0 to 9 passed from the game library to UI.
-  It is used to determine the type of the item.
-  It is set separately for every element of the fame field matrix.
-  0 - empty square cell, 1 - circle with color #1, 2 - color #2 circle.
-  */
+
+  // Note for 2 following functions:
+  // Item code system:
+  // How it will work:
+  // item_code is a number from 0 to 39 passed from the game library to UI.
+  // item_code is used to determine the type of item and it's color.
+  // It is set separately for every element of the fame field matrix.
+  // Dozens determin the type of the item, units - colors.
+  // How it works now:
+  // item_code is a number from 0 to 9 passed from the game library to UI.
+  // It is used to determine the type of the item.
+  // It is set separately for every element of the fame field matrix.
+  // 0 - empty square cell, 1 - circle with color #1, 2 - color #2 circle.
   void setItem(int x, int y, int item_code);
   int getItemCode(int x, int y) const;
 };

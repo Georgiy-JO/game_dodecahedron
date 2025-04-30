@@ -46,9 +46,11 @@ set(PROJECT_SOURCES
     gamewindow.cpp
     gamewindow.h
     gamewindow.ui
-    Colors_c.tpp
-    gridscene_.h
-    gridscene_.cpp
+    gridscene_/Colors_c.tpp
+    gridscene_/gridscene_.h
+    gridscene_/gridscene_.cpp
+    workspaces.cpp
+    libinteraction.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

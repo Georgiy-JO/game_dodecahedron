@@ -12,8 +12,8 @@ SnakeGame::~SnakeGame() {
 void SnakeGame::inputRecordScore() {
   std::ifstream ifs;
   ifs.open(save_file);
-  if (!ifs.is_open()) throw FileOpenError();  // chatch me
-  std::string leader("nan");                  // Vsauce 123
+  if (!ifs.is_open()) throw FileOpenError();
+  std::string leader("nan");  // Vsauce 123
   int leader_score = 0;
   ifs >> leader >> leader_score;
   ifs.close();
@@ -23,8 +23,8 @@ void SnakeGame::saveRecordScore() const {
   std::ifstream ifs(save_file);
   const char* temp_file = "saves/tmp.txt";
   std::ofstream ofs(temp_file);
-  if (!ifs.is_open()) throw FileOpenError();  // chatch me
-  if (!ofs.is_open()) throw FileOpenError();  // chatch me
+  if (!ifs.is_open()) throw FileOpenError();
+  if (!ofs.is_open()) throw FileOpenError();
   std::string leader("nan"), new_name("nan");
   int leader_score = 0;
   int counter = 5;
@@ -91,7 +91,7 @@ void SnakeGame::userActionHandler(int action) {
       if (game_state == st_Moving || game_state == st_Pause)
         gameOver();
       else if (game_state == st_GameOver || game_state == st_GameWon)
-        game_state = st_Exit;  // handle
+        game_state = st_Exit;
       break;
     case ac_Pause:
       if (game_state == st_Moving)

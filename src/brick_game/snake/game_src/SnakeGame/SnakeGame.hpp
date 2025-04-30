@@ -11,9 +11,7 @@ class SnakeGame {
   enum Game_t { Standart_snake, Borderless_snake };
   enum GameState_t {
     st_Exit = -1,
-    // st_Start,
     st_Moving,
-    // st_Turn,
     st_Eat,
     st_GameOver,
     st_GameWon,

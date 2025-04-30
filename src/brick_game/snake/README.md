@@ -54,4 +54,4 @@ The game was based on another game called Blockage. It had two players controlli
 
 ## Notes for future
 - moving food sounds interesting...
-- 
+- Check if the name will be written to record list if the user make a record, but this record is lower than theirs highest.

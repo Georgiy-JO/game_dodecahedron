@@ -9,7 +9,7 @@
 #include <QTimer>
 #include <QToolTip>
 
-#include "gridscene_.h"
+#include "gridscene_/gridscene_.h"
 
 #ifdef TE_TRIS
 #include "../../brick_game/tetris/tetris.h"
@@ -17,8 +17,6 @@
 #ifdef S_SNAKE
 #include "../../brick_game/snake/s-snake.h"
 #endif
-
-// #include "../../brick_game/snake/s-snake.h"           //temp
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

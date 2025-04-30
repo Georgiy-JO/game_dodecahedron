@@ -42,7 +42,6 @@ void GridScene_::setupScene(
   gr_height = grid_height;
   pixel_size = pixel;
   scene->setSceneRect(0, 0, gr_width * pixel_size, gr_height * pixel_size);
-  // scene->setBackgroundBrush(QBrush(QColor(GridConstants::Colors_c::color(GridConstants::Colors_c::cl_BackGround))));
   allocateGrid();
 }
 void GridScene_::cleanScene() {
