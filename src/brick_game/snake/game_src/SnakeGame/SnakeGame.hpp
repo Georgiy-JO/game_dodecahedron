@@ -15,9 +15,7 @@ class SnakeGame {
     st_Eat,
     st_GameOver,
     st_GameWon,
-    // st_Message,
     st_Pause,
-    // st_BorderTransfort
   };
   enum UserActions_t {
     ac_Start,
@@ -46,7 +44,6 @@ class SnakeGame {
 
   void inputRecordScore();
   void saveRecordScore() const;
-  std::string setRecordName() const;
   u_int getSpeed() const;
   void updateScoreSpeed();
 

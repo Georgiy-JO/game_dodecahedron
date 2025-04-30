@@ -33,7 +33,7 @@ void SnakeGame::saveRecordScore() const {
     ifs >> leader >> leader_score;
     if (!flag && leader_score < score) {
       flag = 1;
-      new_name = setRecordName();
+      new_name = "user_1";
       ofs << new_name << " " << score << std::endl;
       counter--;
     }
@@ -41,16 +41,12 @@ void SnakeGame::saveRecordScore() const {
       ofs << leader << " " << leader_score << std::endl;
     counter--;
   }
-  if (counter > 0 && !flag) ofs << setRecordName() << " " << score << std::endl;
+  if (counter > 0 && !flag) ofs << "user_1 " << score << std::endl;
 
   ifs.close();
   ofs.close();
   std::remove(save_file);
   std::rename(temp_file, save_file);
-}
-std::string SnakeGame::setRecordName() const {
-  // update in better version for github
-  return "user_1";
 }
 void SnakeGame::updateScoreSpeed() {
   score += field.getFoodValue();  // different score for different types of food
