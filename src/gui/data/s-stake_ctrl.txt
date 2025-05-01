@@ -11,4 +11,4 @@ Arrow left
 Turn right
 Arrow right
 Speed up
-Arrow up/z/Space
+Arrow up/z
