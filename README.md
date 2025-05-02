@@ -1,8 +1,8 @@
 # Dodecahedron games
 
 ## Contents
-- [Contents](#contents)
 - [General](#general)
+  - [!Notes for viewers](#notes-for-viewers)
   - [Theory](#theory)
 - [Project specifications](#project-specifications)
   - [Project elements](#project-elements)
@@ -12,6 +12,9 @@
 
 ## General
 This project is an implementation of several games, including "The Te-Tris", "The S-Snake", etc. Furthermore, it includes console (TUI) and windowed (GUI) UI for those games. The implementation languages are: C, C++. This version of the project is make for s21 specifications, more advanced versions will appear in the [GitHub repository](https://github.com/Georgiy-JO/game_dodecahedron) later. This version does not allow to have several games in the same client. Due to that installing games separately is required: install_gui_first, install_gui_second, install_tui_first, install_tui_second (for more info checkout main [Makefile](/src/Makefile)).
+
+### !Notes for viewers
+This project version is made for s21, there still are elements that will be active in future versions of the project (those are unused or inactive now). Furthermore, in the repository there are 2 last versions: with comments and without one. Those are present due to rules of code commenting and due to fact that those rules make headers hardly more readable (for reference check commits with according comments).
 
 ### Theory
 

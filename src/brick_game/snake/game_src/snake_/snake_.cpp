@@ -3,7 +3,7 @@
 
 namespace s21 {
 snake_::snake_() {
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < def_length; i++) {
     nodes.push_back(node_(0, i));
   }
 }
@@ -48,7 +48,7 @@ snake_::node_ snake_::getHead() const { return (coords_t)nodes[0]; }
 int snake_::getDirection() const { return direction; }
 void snake_::reset(int x_begining, int y_begining) {
   nodes.clear();
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < def_length; i++) {
     nodes.push_back(node_(x_begining, y_begining - i));
   }
   direction = Down;

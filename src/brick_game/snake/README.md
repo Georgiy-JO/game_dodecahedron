@@ -50,8 +50,3 @@ Has the same set of rules as the classical one, but with the mageor difference -
 The game was based on another game called Blockage. It had two players controlling characters that left a trail that you couldn't run into. The player who lasted the longest won. In 1977, Atari released Worm, which was now a single player game. The most popular version of the game is probably the 1997 version released by the Swedish company Nokia for their Nokia 6110 phone, developed by Taneli Armanto.
 
 ## [The S-Snake specifications](/materials/S-Snake_check_list.md)
-
-
-## Notes for future
-- moving food sounds interesting...
-- Check if the name will be written to record list if the user make a record, but this record is lower than theirs highest.
